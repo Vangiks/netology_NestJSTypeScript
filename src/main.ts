@@ -1,1 +1,0 @@
-const p: number = 5;

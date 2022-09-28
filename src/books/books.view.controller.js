@@ -25,7 +25,7 @@ class BooksController {
     else response.render('errors/404');
   }
 
-  async create(reques, response) {
+  async create(_reques, response) {
     response.render('books/create', { title, book: {} });
   }
 

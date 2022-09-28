@@ -1,6 +1,7 @@
-const { Schema, model } = require('mongoose');
+import { Schema, model, HydratedDocument } from 'mongoose';
+import { IBook } from '../interfaces';
 
-const booksSchema = Schema({
+const booksSchema = new Schema<IBook>({
   title: {
     type: String,
     default: '',
@@ -16,7 +17,7 @@ const booksSchema = Schema({
   favorite: {
     type: Boolean,
     default: false,
-    set: (value) => {
+    set: (value: string | boolean) => {
       let result = value;
       if (typeof value === 'string') {
         result = Boolean(value);
@@ -42,4 +43,7 @@ const booksSchema = Schema({
   },
 });
 
-module.exports = model('Books', booksSchema);
+type TDocumentBook = HydratedDocument<IBook>;
+
+export { TDocumentBook };
+export default model<IBook>('Books', booksSchema);
