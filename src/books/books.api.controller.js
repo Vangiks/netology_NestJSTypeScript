@@ -1,9 +1,12 @@
-const BooksService = require('./books.service');
+const { BooksService } = require('./books.service');
+const { mainContainer } = require('../container');
+
+const booksService = mainContainer.get(BooksService);
 
 class BooksController {
   async getBooks(reques, response) {
     const id = reques.params?.id || '';
-    const books = await BooksService.getBooks(id, { increase: true });
+    const books = await booksService.getBooks(id, { increase: true });
     if (!books) {
       return response.status(404).send({
         errors: ['Book/Books not found'],
@@ -25,7 +28,7 @@ class BooksController {
       if (file) {
         body = { ...body, fileName: file.originalname, fileBook: file.path };
       }
-      const result = await BooksService.createBook(body);
+      const result = await booksService.createBook(body);
 
       if (result)
         return response
@@ -47,9 +50,9 @@ class BooksController {
     const id = reques.params?.id || '';
     const body = reques.body;
     if (id && body) {
-      const book = await BooksService.getBooks(id);
+      const book = await booksService.getBooks(id);
       if (book) {
-        let updateBook = await BooksService.updateBook(id, body);
+        let updateBook = await booksService.updateBook(id, body);
 
         if (updateBook)
           return response
@@ -76,9 +79,9 @@ class BooksController {
   async deleteBook(reques, response) {
     const id = reques.params?.id || '';
     if (id) {
-      const book = await BooksService.getBooks(id);
+      const book = await booksService.getBooks(id);
       if (book) {
-        let result = await BooksService.deleteBook(id);
+        let result = await booksService.deleteBook(id);
 
         if (result)
           return response
@@ -104,7 +107,7 @@ class BooksController {
 
   async downloadBook(reques, response) {
     const id = reques.params?.id || '';
-    const book = await BooksService.getBooks(id);
+    const book = await booksService.getBooks(id);
     if (book)
       if (book?.fileBook) {
         return response.status(200).download(book.fileBook);

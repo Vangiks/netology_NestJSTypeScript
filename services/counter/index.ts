@@ -1,8 +1,11 @@
+import 'reflect-metadata';
+import { injectable } from 'inversify';
 import fetch from 'node-fetch';
 
 import config from '../../config';
 import { ICounter } from './index.d';
 
+@injectable()
 class CounterBook implements ICounter {
   host: string;
 

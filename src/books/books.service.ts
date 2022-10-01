@@ -1,20 +1,21 @@
+import 'reflect-metadata';
+import { injectable, inject } from 'inversify';
+
 import Books, { TDocumentBook } from './model';
 import { IBook } from './interfaces';
 import config from '../../config';
 
-import { CounterBook, ICounter } from '../../services/counter';
+import { ICounter } from '../../services/counter';
+import { ETypeService } from '../types';
 
-interface BooksServiceProps {
-  counterBook: ICounter;
-}
-
-class BooksService implements BooksServiceProps {
+@injectable()
+class BooksService {
   databasePath: string;
-  counterBook: ICounter;
+  private _counter: ICounter;
 
-  constructor({ counterBook }: BooksServiceProps) {
+  constructor(@inject(ETypeService.Counter) counter: ICounter) {
     this.databasePath = config.DATABASE_PATH;
-    this.counterBook = counterBook;
+    this._counter = counter;
   }
 
   async getBooks(
@@ -46,9 +47,9 @@ class BooksService implements BooksServiceProps {
       if (!book) return null;
       let counter = 0;
       if (options.increase) {
-        counter = await this.counterBook.icreaseCounter(book.id);
+        counter = await this._counter.icreaseCounter(book.id);
       }
-      counter = await this.counterBook.getCounter(book.id);
+      counter = await this._counter.getCounter(book.id);
 
       book.counter = counter;
       return book;
@@ -96,4 +97,4 @@ class BooksService implements BooksServiceProps {
   }
 }
 
-module.exports = new BooksService({ counterBook: new CounterBook() });
+export { BooksService };
