@@ -1,25 +1,32 @@
-const config = require('./config');
-const modulesView = require('./src/app.view.module');
-const modulesApi = require('./src/app.api.module');
-const error = require('./middleware/error');
-const session = require('express-session');
-const mongoose = require('mongoose');
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
+import { Request, Response, NextFunction } from 'express';
+import session from 'express-session';
+import mongoose from 'mongoose';
+import passport from 'passport';
+import passportLocal from 'passport-local';
 
-const http = require('http');
-const socketIO = require('socket.io');
+import http from 'http';
+import { Server } from 'socket.io';
 
-const Users = require('./src/users/users.service');
+import config from './config';
+import modulesView from './src/app.view.module';
+import modulesApi from './src/app.api.module';
+import error from './middleware/error';
+
+import Users, { UsersService } from './src/users/users.service';
+import { TDocumentUser } from './src/users/model';
+
+const LocalStrategy = passportLocal.Strategy;
 
 passport.use('local', new LocalStrategy(Users.options, Users.verify));
 
 passport.serializeUser((user, cb) => {
-  cb(null, user.id);
+  if (UsersService.isUser(user)) {
+    cb(null, user.id);
+  }
 });
 
-passport.deserializeUser(async (id, cb) => {
-  const user = await Users.getUser(id);
+passport.deserializeUser(async (id: string, cb) => {
+  const user: TDocumentUser | null = await Users.getUser(id);
   if (!user) {
     return cb(null);
   }
@@ -29,8 +36,8 @@ passport.deserializeUser(async (id, cb) => {
 const express = require('express'),
   app = express();
 
-const server = http.Server(app);
-const io = socketIO(server);
+const server = new http.Server(app);
+const io = new Server(server);
 
 const host = config.APP_BASE_PATH;
 const port = config.PORT;
@@ -41,7 +48,7 @@ console.log(config);
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/src/views');
 
-app.get('/', (req, res, next) => {
+app.get('/', (_req: Request, res: Response, _next: NextFunction) => {
   res.redirect('/books');
 });
 
@@ -66,11 +73,15 @@ io.on('connection', (socket) => {
   console.log(`Socket connected: ${id}`);
 
   const { roomName } = socket.handshake.query;
-  
-  socket.join(roomName);
+
+  if (roomName) {
+    socket.join(roomName);
+  }
   socket.on('message-to-room', (msg) => {
     msg.type = `room: ${roomName}`;
-    socket.to(roomName).emit('message-to-room', msg);
+    if (roomName) {
+      socket.to(roomName).emit('message-to-room', msg);
+    }
     socket.emit('message-to-room', msg);
   });
 

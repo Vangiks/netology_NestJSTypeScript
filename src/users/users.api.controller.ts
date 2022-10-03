@@ -1,7 +1,10 @@
-const UsersService = require('./users.service');
+import { Request, Response } from 'express';
+import { IUser } from './dto';
+
+import UsersService from './users.service';
 
 class UsersController {
-  login(request, response) {
+  login(request: Request, response: Response) {
     if (request.user) {
       return response.status(200).send({
         response: 'OK',
@@ -16,7 +19,7 @@ class UsersController {
       });
   }
 
-  async me(request, response) {
+  async me(request: Request, response: Response) {
     const { user } = request;
     if (!request.isAuthenticated()) {
       return response.status(401).send({
@@ -32,8 +35,8 @@ class UsersController {
     });
   }
 
-  async signup(request, response) {
-    const user = request.body;
+  async signup(request: Request, response: Response) {
+    const user: IUser = request.body;
 
     const result = await UsersService.createUser(user);
     if (!result) {
@@ -51,4 +54,4 @@ class UsersController {
   }
 }
 
-module.exports = new UsersController();
+export default new UsersController();

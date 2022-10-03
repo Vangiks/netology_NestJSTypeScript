@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { injectable, inject } from 'inversify';
 
 import Books, { TDocumentBook } from './model';
-import { IBook } from './interfaces';
+import { IBook } from './dto';
 import config from '../../config';
 
 import { ICounter } from '../../services/counter';
@@ -97,4 +97,4 @@ class BooksService {
   }
 }
 
-export { BooksService };
+export default BooksService;

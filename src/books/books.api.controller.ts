@@ -1,10 +1,12 @@
-const { BooksService } = require('./books.service');
-const { mainContainer } = require('../container');
+import { Request, Response } from 'express';
+
+import BooksService from './books.service';
+import { mainContainer } from '../container';
 
 const booksService = mainContainer.get(BooksService);
 
 class BooksController {
-  async getBooks(reques, response) {
+  async getBooks(reques: Request, response: Response) {
     const id = reques.params?.id || '';
     const books = await booksService.getBooks(id, { increase: true });
     if (!books) {
@@ -21,7 +23,7 @@ class BooksController {
     });
   }
 
-  async createBook(reques, response) {
+  async createBook(reques: Request, response: Response) {
     const file = reques?.file || null;
     let body = reques.body;
     if (body) {
@@ -46,7 +48,7 @@ class BooksController {
         .send({ errors: ['Bad request'], response: null, status: false });
   }
 
-  async updateBook(reques, response) {
+  async updateBook(reques: Request, response: Response) {
     const id = reques.params?.id || '';
     const body = reques.body;
     if (id && body) {
@@ -76,7 +78,7 @@ class BooksController {
       });
   }
 
-  async deleteBook(reques, response) {
+  async deleteBook(reques: Request, response: Response) {
     const id = reques.params?.id || '';
     if (id) {
       const book = await booksService.getBooks(id);
@@ -105,10 +107,10 @@ class BooksController {
       });
   }
 
-  async downloadBook(reques, response) {
+  async downloadBook(reques: Request, response: Response) {
     const id = reques.params?.id || '';
     const book = await booksService.getBooks(id);
-    if (book)
+    if (!Array.isArray(book) && book)
       if (book?.fileBook) {
         return response.status(200).download(book.fileBook);
       } else
@@ -120,4 +122,4 @@ class BooksController {
   }
 }
 
-module.exports = new BooksController();
+export default new BooksController();

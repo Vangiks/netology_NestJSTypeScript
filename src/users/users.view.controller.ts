@@ -1,20 +1,23 @@
-const UsersService = require('./users.service');
+import { Request, Response, NextFunction } from 'express';
+import { IUser } from './dto';
+
+import UsersService from './users.service';
 
 const title = 'Профиль';
 
 class UsersController {
-  login(request, response) {
+  login(_request: Request, response: Response) {
     return response.render('user/login-register', { title });
   }
 
-  signin(request, response) {
+  signin(request: Request, response: Response) {
     const { user } = request;
     if (user) {
       return response.redirect('/user/me');
     } else return response.render('user/login-register', { title });
   }
 
-  logout(request, response, next) {
+  logout(request: Request, response: Response, next: NextFunction) {
     request.logout((err) => {
       if (err) {
         return next(err);
@@ -23,7 +26,7 @@ class UsersController {
     });
   }
 
-  async me(request, response) {
+  async me(request: Request, response: Response) {
     const { user } = request;
     if (!request.isAuthenticated()) {
       return response.redirect('/user/login');
@@ -31,12 +34,12 @@ class UsersController {
     return response.render('user/me', { user, title });
   }
 
-  async signup(request, response) {
-    const user = request.body;
+  async signup(request: Request, response: Response) {
+    const user: IUser = request.body;
 
     await UsersService.createUser(user);
     return response.redirect('/user/login');
   }
 }
 
-module.exports = new UsersController();
+export default new UsersController();

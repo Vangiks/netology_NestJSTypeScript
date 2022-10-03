@@ -1,8 +1,9 @@
-const express = require('express'),
-  router = express.Router(),
-  UsersController = require('./users.api.controller');
+import express from 'express';
+import passport from 'passport';
 
-const passport = require('passport');
+import UsersController from './users.api.controller';
+
+const router = express.Router();
 
 router
   .route('/login')
@@ -11,4 +12,4 @@ router.route('/me').get(UsersController.me);
 
 router.route('/signup').post(UsersController.signup);
 
-module.exports = router;
+export default router;

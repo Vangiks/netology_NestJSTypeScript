@@ -1,8 +1,11 @@
-const express = require('express'),
-  router = express.Router(),
-  BooksController = require('./books.view.controller');
+import express from 'express';
 
-const File = require('../../middleware/file');
+import File from '../../middleware/file';
+
+import BooksController from './books.view.controller';
+
+const router = express.Router();
+
 const file = new File('public/books/upload', null, { uniqueName: true });
 
 router
@@ -25,4 +28,4 @@ router.route('/:id/delete').post(BooksController.deleteBook);
 
 router.route('/:id/download').get(BooksController.downloadBook);
 
-module.exports = router;
+export default router;

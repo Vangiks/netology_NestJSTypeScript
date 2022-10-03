@@ -1,5 +1,5 @@
 import { Schema, model, HydratedDocument } from 'mongoose';
-import { IBook } from '../interfaces';
+import { IBook } from '../dto';
 
 const booksSchema = new Schema<IBook>({
   title: {
