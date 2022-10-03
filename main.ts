@@ -12,12 +12,16 @@ import modulesView from './src/app.view.module';
 import modulesApi from './src/app.api.module';
 import error from './middleware/error';
 
-import Users, { UsersService } from './src/users/users.service';
+import UsersService from './src/users/users.service';
 import { TDocumentUser } from './src/users/model';
+
+import { mainContainer } from './src/container';
+
+const usersService = mainContainer.get(UsersService);
 
 const LocalStrategy = passportLocal.Strategy;
 
-passport.use('local', new LocalStrategy(Users.options, Users.verify));
+passport.use('local', new LocalStrategy(usersService.options, usersService.verify));
 
 passport.serializeUser((user, cb) => {
   if (UsersService.isUser(user)) {
@@ -26,7 +30,7 @@ passport.serializeUser((user, cb) => {
 });
 
 passport.deserializeUser(async (id: string, cb) => {
-  const user: TDocumentUser | null = await Users.getUser(id);
+  const user: TDocumentUser | null = await usersService.getUser(id);
   if (!user) {
     return cb(null);
   }

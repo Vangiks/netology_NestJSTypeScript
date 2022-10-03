@@ -1,3 +1,6 @@
+import 'reflect-metadata';
+import { injectable } from 'inversify';
+
 import Users, { TDocumentUser } from './model';
 import { IUser } from './dto';
 
@@ -6,6 +9,7 @@ interface IOptions {
   passwordField: string;
 }
 
+@injectable()
 class UsersService {
   databasePath: string;
   options: IOptions;
@@ -68,5 +72,4 @@ class UsersService {
   }
 }
 
-export default new UsersService();
-export { UsersService };
+export default UsersService;

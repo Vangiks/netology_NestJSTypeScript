@@ -2,6 +2,9 @@ import { Request, Response, NextFunction } from 'express';
 import { IUser } from './dto';
 
 import UsersService from './users.service';
+import { mainContainer } from '../container';
+
+const usersService = mainContainer.get(UsersService);
 
 const title = 'Профиль';
 
@@ -37,7 +40,7 @@ class UsersController {
   async signup(request: Request, response: Response) {
     const user: IUser = request.body;
 
-    await UsersService.createUser(user);
+    await usersService.createUser(user);
     return response.redirect('/user/login');
   }
 }

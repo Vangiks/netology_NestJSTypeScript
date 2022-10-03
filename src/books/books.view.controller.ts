@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import BooksService from './books.service';
 import { mainContainer } from '../container';
 
-import { UsersService } from '../users/users.service';
+import UsersService from '../users/users.service';
 
 const title = 'Книги';
 

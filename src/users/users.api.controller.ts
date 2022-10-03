@@ -3,6 +3,10 @@ import { IUser } from './dto';
 
 import UsersService from './users.service';
 
+import { mainContainer } from '../container';
+
+const usersService = mainContainer.get(UsersService);
+
 class UsersController {
   login(request: Request, response: Response) {
     if (request.user) {
@@ -38,7 +42,7 @@ class UsersController {
   async signup(request: Request, response: Response) {
     const user: IUser = request.body;
 
-    const result = await UsersService.createUser(user);
+    const result = await usersService.createUser(user);
     if (!result) {
       return response.status(500).send({
         response: false,
