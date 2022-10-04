@@ -1,26 +1,31 @@
 import multer, { StorageEngine } from 'multer';
 
-export interface IOptions {
-  uniqueName: boolean;
-}
+import 'reflect-metadata';
+import { injectable, unmanaged } from 'inversify';
 
-class File {
+import { IOptions, IFile } from './index.d';
+
+@injectable()
+class File implements IFile {
   destination: string;
   filename: string | null;
   options: IOptions;
   storage: StorageEngine;
 
   constructor(
-    destination: string,
-    filename: string = null,
-    options: IOptions = { uniqueName: true }
+    @unmanaged() destination: string,
+    @unmanaged() filename: string | null = null,
+    @unmanaged() options: IOptions = { uniqueName: true }
   ) {
     this.filename = filename;
     this.destination = destination;
     this.options = options;
+  }
+
+  diskStorage() {
     this.storage = multer.diskStorage({
       destination: (_req, _file, cb) => {
-        cb(null, destination);
+        cb(null, this.destination);
       },
       filename: (_req, file, cb) => {
         let name = file.originalname;
@@ -40,4 +45,4 @@ class File {
   }
 }
 
-export default File;
+export { File, IFile };
