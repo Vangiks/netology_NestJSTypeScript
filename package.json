@@ -1,7 +1,7 @@
 {
   "name": "netology_ts_nest",
   "version": "1.0.0",
-  "main": "main.js",
+  "main": "dist/main.js",
   "license": "MIT",
   "scripts": {
     "copy-views": "ts-node ./helpers/copyViews.ts",
