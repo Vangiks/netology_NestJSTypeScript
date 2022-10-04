@@ -1,15 +1,19 @@
 import express from 'express';
 import BooksController from './books.api.controller';
-import File from '../../middleware/file';
+
+import BooksService from './books.service';
+import { mainContainer } from '../container';
+
+const fileStorage = mainContainer.get(BooksService).getDiskStorage();
+fileStorage.destination = 'public/books/upload';
+fileStorage.diskStorage();
 
 const router = express.Router();
-
-const file = new File('public/books/upload', null, { uniqueName: true });
 
 router
   .route('/')
   .get(BooksController.getBooks)
-  .post(file.upload().single('fileBook'))
+  .post(fileStorage.upload().single('fileBook'))
   .post(BooksController.createBook);
 
 router

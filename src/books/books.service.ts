@@ -6,16 +6,26 @@ import { IBook } from './dto';
 import config from '../../config';
 
 import { ICounter } from '../../services/counter';
+import { IFile } from '../../services/file';
 import { ETypeService } from '../types';
 
 @injectable()
 class BooksService {
   databasePath: string;
   private _counter: ICounter;
+  private _file: IFile;
 
-  constructor(@inject(ETypeService.Counter) counter: ICounter) {
+  constructor(
+    @inject(ETypeService.Counter) counter: ICounter,
+    @inject(ETypeService.File) file: IFile
+  ) {
     this.databasePath = config.DATABASE_PATH;
     this._counter = counter;
+    this._file = file;
+  }
+
+  getDiskStorage(): IFile {
+    return this._file;
   }
 
   async getBooks(

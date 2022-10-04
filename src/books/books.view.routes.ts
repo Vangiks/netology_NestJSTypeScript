@@ -1,17 +1,20 @@
 import express from 'express';
 
-import File from '../../middleware/file';
-
 import BooksController from './books.view.controller';
 
-const router = express.Router();
+import BooksService from './books.service';
+import { mainContainer } from '../container';
 
-const file = new File('public/books/upload', null, { uniqueName: true });
+const fileStorage = mainContainer.get(BooksService).getDiskStorage();
+fileStorage.destination = 'public/books/upload';
+fileStorage.diskStorage();
+
+const router = express.Router();
 
 router
   .route('/create')
   .get(BooksController.create)
-  .post(file.upload().single('fileBook'))
+  .post(fileStorage.upload().single('fileBook'))
   .post(BooksController.createBook);
 
 router.route('/').get(BooksController.getBooks);
@@ -21,7 +24,7 @@ router.route('/:id').get(BooksController.getBooks);
 router
   .route('/:id/update')
   .get(BooksController.changeBooks)
-  .post(file.upload().single('fileBook'))
+  .post(fileStorage.upload().single('fileBook'))
   .post(BooksController.updateBook);
 
 router.route('/:id/delete').post(BooksController.deleteBook);
