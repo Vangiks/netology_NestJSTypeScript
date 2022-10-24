@@ -1,16 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid';
-import { IDocumentBook } from './model';
+import { InjectModel, InjectConnection } from '@nestjs/mongoose';
+import { Model, Connection } from 'mongoose';
+import { IDocumentBook, Book } from './model';
 import { ICreateBook, IUpdateBook } from './dto';
 
 @Injectable()
 export class BooksService {
-  private books: Array<IDocumentBook> = [];
+  constructor(
+    @InjectModel(Book.name) private BookModel: Model<IDocumentBook>,
+    @InjectConnection() private connection: Connection,
+  ) {}
 
-  async getBooks(): Promise<Array<IDocumentBook> | IDocumentBook | null> {
+  async getBooks(): Promise<Array<IDocumentBook> | null> {
     try {
-      const books: Array<IDocumentBook> = this.books;
-      return books;
+      return this.BookModel.find().exec();
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.log(error.message);
@@ -24,9 +27,7 @@ export class BooksService {
     options = { increase: false },
   ): Promise<IDocumentBook | null> {
     try {
-      const book: IDocumentBook = this.books.find((book) => book.id === id);
-      if (!book) return null;
-      return book;
+      return this.BookModel.findById(id);
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.log(error.message);
@@ -37,16 +38,8 @@ export class BooksService {
 
   async createBook(book: ICreateBook): Promise<IDocumentBook | null> {
     try {
-      const newBook: IDocumentBook = {
-        id: uuidv4(),
-        ...book,
-        counter: 0,
-        fileBook: '',
-        fileCover: '',
-        fileName: '',
-      };
-      this.books.push(newBook);
-      return newBook;
+      const newBook = new this.BookModel(book);
+      return newBook.save();
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.log(error.message);
@@ -60,13 +53,7 @@ export class BooksService {
     book: IUpdateBook,
   ): Promise<IDocumentBook | null> {
     try {
-      const index: number = this.books.findIndex((book) => book.id === id);
-      if (index === -1) {
-        throw new Error('Book not found');
-      }
-      const updateBook = { ...this.books[index], ...book };
-      this.books[index] = updateBook;
-      return updateBook;
+      return this.BookModel.findByIdAndUpdate(id, book);
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.log(error.message);
@@ -77,8 +64,7 @@ export class BooksService {
 
   async deleteBook(id: string) {
     try {
-      this.books = this.books.filter((book) => book.id !== id);
-      return true;
+      return this.BookModel.deleteOne({ _id: id });
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.log(error.message);

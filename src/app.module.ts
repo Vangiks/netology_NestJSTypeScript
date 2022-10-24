@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { BooksModule } from './books/books.module';
 import { AppController } from './app.controller';
@@ -11,6 +12,7 @@ import configuration from '../config';
       load: [configuration],
     }),
     BooksModule,
+    MongooseModule.forRoot(process.env.DATABASE_PATH),
   ],
   controllers: [AppController],
   providers: [AppService],
