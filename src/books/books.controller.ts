@@ -12,111 +12,93 @@ import {
 import { BooksService } from './books.service';
 import { IBooksResponse } from './interfaces';
 import { ICreateBook, IUpdateBook } from './dto';
+import { IDocumentBook } from './model';
 
 @Controller('books')
 export class BooksController {
   constructor(private booksService: BooksService) {}
   @Get()
-  async getBooks(@Res() response: IBooksResponse): Promise<IBooksResponse> {
+  async getBooks(
+    @Res({ passthrough: true }) response: IBooksResponse,
+  ): Promise<Array<IDocumentBook> | string> {
     const books = await this.booksService.getBooks();
     if (!books) {
-      return response.status(HttpStatus.NOT_FOUND).send({
-        errors: ['Books not found'],
-        response: null,
-        status: true,
-      });
+      response.status(HttpStatus.NOT_FOUND);
+      return 'Books not found';
     }
-    return response.status(HttpStatus.OK).send({
-      errors: [],
-      response: books,
-      status: true,
-    });
+    response.status(HttpStatus.OK);
+    return books;
   }
 
   @Post()
   async createBook(
     @Body() book: ICreateBook,
-    @Res() response: IBooksResponse,
-  ): Promise<IBooksResponse> {
+    @Res({ passthrough: true }) response: IBooksResponse,
+  ): Promise<IDocumentBook | string> {
     if (book) {
       const result = await this.booksService.createBook(book);
-      if (result)
-        return response
-          .status(HttpStatus.CREATED)
-          .send({ errors: [], response: result, status: true });
-      else
-        return response.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
-          errors: ['Unable create book'],
-          response: null,
-          status: false,
-        });
-    } else
-      return response
-        .status(HttpStatus.BAD_REQUEST)
-        .send({ errors: ['Bad request'], response: null, status: false });
+      if (result) {
+        response.status(HttpStatus.CREATED);
+        return result;
+      } else {
+        response.status(HttpStatus.INTERNAL_SERVER_ERROR);
+        return 'Unable create book';
+      }
+    } else {
+      response.status(HttpStatus.BAD_REQUEST);
+      return 'Bad request';
+    }
   }
 
   @Get(':id')
   async getBook(
     @Param('id') id: string,
-    @Res() response: IBooksResponse,
-  ): Promise<IBooksResponse> {
-    const books = await this.booksService.getBook(id);
-    if (!books) {
-      return response.status(HttpStatus.NOT_FOUND).send({
-        errors: ['Book not found'],
-        response: null,
-        status: true,
-      });
+    @Res({ passthrough: true }) response: IBooksResponse,
+  ): Promise<IDocumentBook | string> {
+    const book = await this.booksService.getBook(id);
+    if (!book) {
+      response.status(HttpStatus.NOT_FOUND);
+      return 'Book not found';
     }
-    return response.status(HttpStatus.OK).send({
-      errors: [],
-      response: books,
-      status: true,
-    });
+    response.status(HttpStatus.OK);
+    return book;
   }
 
   @Put(':id')
   async updateBook(
     @Param('id') id: string,
     @Body() book: IUpdateBook,
-    @Res() response: IBooksResponse,
-  ): Promise<IBooksResponse> {
+    @Res({ passthrough: true }) response: IBooksResponse,
+  ): Promise<IDocumentBook | string> {
     let updateBook = await this.booksService.updateBook(id, book);
-    if (updateBook)
-      return response
-        .status(HttpStatus.OK)
-        .send({ errors: [], response: updateBook, status: true });
-    else
-      return response.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
-        errors: ['Unable update book'],
-        response: null,
-        status: false,
-      });
+    if (updateBook) {
+      response.status(HttpStatus.OK);
+      return updateBook;
+    } else {
+      response.status(HttpStatus.INTERNAL_SERVER_ERROR);
+      return 'Unable update book';
+    }
   }
 
   @Delete(':id')
   async deleteBook(
     @Param('id') id: string,
-    @Res() response: IBooksResponse,
-  ): Promise<IBooksResponse> {
+    @Res({ passthrough: true }) response: IBooksResponse,
+  ): Promise<boolean | string> {
     const book = await this.booksService.getBook(id);
     if (book) {
       const result = await this.booksService.deleteBook(id);
 
-      if (result)
-        return response
-          .status(HttpStatus.OK)
-          .send({ errors: [], response: null, status: true });
-      else
-        return response.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
-          errors: ['Unable delete book'],
-          response: null,
-          status: false,
-        });
-    } else
-      return response
-        .status(HttpStatus.NOT_FOUND)
-        .send({ errors: ['Book not found'], response: null, status: false });
+      if (result) {
+        response.status(HttpStatus.OK);
+        return true;
+      } else {
+        response.status(HttpStatus.INTERNAL_SERVER_ERROR);
+        return 'Unable delete book';
+      }
+    } else {
+      response.status(HttpStatus.NOT_FOUND);
+      return 'Book not found';
+    }
   }
 }

@@ -17,16 +17,16 @@ export class Book {
   @Prop({ required: true })
   public favorite: boolean;
 
-  @Prop()
+  @Prop({ default: '' })
   public fileCover: string;
 
-  @Prop()
+  @Prop({ default: '' })
   public fileName: string;
 
-  @Prop()
+  @Prop({ default: '' })
   public fileBook: string;
 
-  @Prop()
+  @Prop({ default: 0 })
   public counter: number;
 }
 
