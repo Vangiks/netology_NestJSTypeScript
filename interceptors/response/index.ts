@@ -18,9 +18,9 @@ export class ResponseInterceptor implements NestInterceptor {
       })),
       catchError((err) => {
         return throwError(() => ({
-          status: true,
+          status: false,
           response: null,
-          errors: [err],
+          errors: [err.message],
         }));
       }),
     );

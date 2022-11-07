@@ -8,15 +8,19 @@ import {
   Body,
   Put,
   Delete,
+  UsePipes,
 } from '@nestjs/common';
 import { BooksService } from './books.service';
 import { IBooksResponse } from './interfaces';
 import { ICreateBook, IUpdateBook } from './dto';
 import { IDocumentBook } from './model';
+import { BookValidationPipe } from './validation';
+import { bookSchema } from './validation/schema';
 
 @Controller('books')
 export class BooksController {
   constructor(private booksService: BooksService) {}
+
   @Get()
   async getBooks(
     @Res({ passthrough: true }) response: IBooksResponse,
@@ -30,6 +34,7 @@ export class BooksController {
     return books;
   }
 
+  @UsePipes(new BookValidationPipe(bookSchema))
   @Post()
   async createBook(
     @Body() book: ICreateBook,
@@ -64,6 +69,7 @@ export class BooksController {
     return book;
   }
 
+  @UsePipes(new BookValidationPipe(bookSchema))
   @Put(':id')
   async updateBook(
     @Param('id') id: string,
