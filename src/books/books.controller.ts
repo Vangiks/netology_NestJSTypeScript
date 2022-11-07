@@ -3,15 +3,14 @@ import {
   Get,
   Post,
   Param,
-  Res,
-  HttpStatus,
   Body,
   Put,
   Delete,
   UsePipes,
+  NotFoundException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { BooksService } from './books.service';
-import { IBooksResponse } from './interfaces';
 import { ICreateBook, IUpdateBook } from './dto';
 import { IDocumentBook } from './model';
 import { BookValidationPipe } from './validation';
@@ -22,51 +21,32 @@ export class BooksController {
   constructor(private booksService: BooksService) {}
 
   @Get()
-  async getBooks(
-    @Res({ passthrough: true }) response: IBooksResponse,
-  ): Promise<Array<IDocumentBook> | string> {
+  async getBooks(): Promise<Array<IDocumentBook>> {
     const books = await this.booksService.getBooks();
     if (!books) {
-      response.status(HttpStatus.NOT_FOUND);
-      return 'Books not found';
+      throw new NotFoundException('Book not found');
     }
-    response.status(HttpStatus.OK);
     return books;
+  }
+
+  @Get(':id')
+  async getBook(@Param('id') id: string): Promise<IDocumentBook> {
+    const book = await this.booksService.getBook(id);
+    if (!book) {
+      throw new NotFoundException('Book not found');
+    }
+    return book;
   }
 
   @UsePipes(new BookValidationPipe(bookSchema))
   @Post()
-  async createBook(
-    @Body() book: ICreateBook,
-    @Res({ passthrough: true }) response: IBooksResponse,
-  ): Promise<IDocumentBook | string> {
-    if (book) {
-      const result = await this.booksService.createBook(book);
-      if (result) {
-        response.status(HttpStatus.CREATED);
-        return result;
-      } else {
-        response.status(HttpStatus.INTERNAL_SERVER_ERROR);
-        return 'Unable create book';
-      }
+  async createBook(@Body() book: ICreateBook): Promise<IDocumentBook> {
+    const result = await this.booksService.createBook(book);
+    if (result) {
+      return result;
     } else {
-      response.status(HttpStatus.BAD_REQUEST);
-      return 'Bad request';
+      throw new InternalServerErrorException('Book not found');
     }
-  }
-
-  @Get(':id')
-  async getBook(
-    @Param('id') id: string,
-    @Res({ passthrough: true }) response: IBooksResponse,
-  ): Promise<IDocumentBook | string> {
-    const book = await this.booksService.getBook(id);
-    if (!book) {
-      response.status(HttpStatus.NOT_FOUND);
-      return 'Book not found';
-    }
-    response.status(HttpStatus.OK);
-    return book;
   }
 
   @UsePipes(new BookValidationPipe(bookSchema))
@@ -74,37 +54,28 @@ export class BooksController {
   async updateBook(
     @Param('id') id: string,
     @Body() book: IUpdateBook,
-    @Res({ passthrough: true }) response: IBooksResponse,
-  ): Promise<IDocumentBook | string> {
+  ): Promise<IDocumentBook> {
     let updateBook = await this.booksService.updateBook(id, book);
     if (updateBook) {
-      response.status(HttpStatus.OK);
       return updateBook;
     } else {
-      response.status(HttpStatus.INTERNAL_SERVER_ERROR);
-      return 'Unable update book';
+      throw new InternalServerErrorException('Unable update book');
     }
   }
 
   @Delete(':id')
-  async deleteBook(
-    @Param('id') id: string,
-    @Res({ passthrough: true }) response: IBooksResponse,
-  ): Promise<boolean | string> {
+  async deleteBook(@Param('id') id: string): Promise<boolean> {
     const book = await this.booksService.getBook(id);
     if (book) {
       const result = await this.booksService.deleteBook(id);
 
       if (result) {
-        response.status(HttpStatus.OK);
         return true;
       } else {
-        response.status(HttpStatus.INTERNAL_SERVER_ERROR);
-        return 'Unable delete book';
+        throw new InternalServerErrorException('Unable update book');
       }
     } else {
-      response.status(HttpStatus.NOT_FOUND);
-      return 'Book not found';
+      throw new NotFoundException('Book not found');
     }
   }
 }
