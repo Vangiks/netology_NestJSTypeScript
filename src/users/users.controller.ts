@@ -5,6 +5,9 @@ import {
   UsePipes,
   UnauthorizedException,
   InternalServerErrorException,
+  Get,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ICreateUser, ISigninUser } from './dto';
@@ -12,6 +15,7 @@ import { IDocumentUser } from './model';
 import { UserValidationPipe } from './validation';
 import { userCreateSchema, userSigninSchema } from './validation/schema';
 import { AuthService } from '../auth/auth.service';
+import { JwtAuthGuard } from 'src/auth/auth.guard';
 
 @Controller('users')
 export class UsersController {
@@ -21,7 +25,7 @@ export class UsersController {
   ) {}
 
   @UsePipes(new UserValidationPipe(userCreateSchema))
-  @Post()
+  @Post('signup')
   async signup(@Body() user: ICreateUser): Promise<IDocumentUser> {
     const result = await this.usersService.createUser(user);
     if (result) {
@@ -32,10 +36,10 @@ export class UsersController {
   }
 
   @UsePipes(new UserValidationPipe(userSigninSchema))
-  @Post()
+  @Post('signin')
   async signin(@Body() user: ISigninUser): Promise<string> {
     const _user = await this.usersService.getUser(user.email);
-    if (user) {
+    if (_user) {
       const jwtPayload = {
         id: _user.id,
         email: _user.email,
@@ -45,5 +49,11 @@ export class UsersController {
     } else {
       throw new UnauthorizedException('Failed to authorization user');
     }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  async me(@Request() request) {
+    return request.user;
   }
 }

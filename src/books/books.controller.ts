@@ -9,13 +9,16 @@ import {
   UsePipes,
   NotFoundException,
   InternalServerErrorException,
+  UseGuards,
 } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { BooksService } from './books.service';
 import { ICreateBook, IUpdateBook } from './dto';
 import { IDocumentBook } from './model';
 import { BookValidationPipe } from './validation';
 import { bookSchema } from './validation/schema';
 
+@UseGuards(JwtAuthGuard)
 @Controller('books')
 export class BooksController {
   constructor(private booksService: BooksService) {}
