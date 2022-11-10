@@ -6,4 +6,5 @@ export default () => ({
   counterBooks: {
     host: process.env.APP_COUNTER_BOOKS_HOST || 'http://localhost:3002',
   },
+  secretToken: process.env.SECRET_TOKEN,
 });

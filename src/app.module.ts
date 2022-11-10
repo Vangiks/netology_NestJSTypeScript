@@ -10,6 +10,7 @@ import configuration from '../config';
   imports: [
     ConfigModule.forRoot({
       load: [configuration],
+      isGlobal: true,
     }),
     BooksModule,
     MongooseModule.forRoot(process.env.DATABASE_PATH),
