@@ -9,4 +9,4 @@ export interface IBook {
 }
 
 export interface ICreateBook extends IBook {}
-export interface IUpdateBook extends IBook {}
+export interface IUpdateBook extends Partial<IBook> {}

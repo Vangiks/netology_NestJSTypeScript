@@ -8,7 +8,7 @@ import { ICreateBook, IUpdateBook } from './dto';
 export class BooksService {
   constructor(
     @InjectModel(Book.name) private BookModel: Model<IDocumentBook>,
-    @InjectConnection() private connection: Connection,
+    // @InjectConnection() private connection: Connection,
   ) {}
 
   async getBooks(): Promise<Array<IDocumentBook> | null> {
