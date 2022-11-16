@@ -1,7 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, HydratedDocument } from 'mongoose';
 
 export interface IDocumentBook extends Document {}
+
+export type BookDocument = HydratedDocument<Book>;
 
 @Schema()
 export class Book {

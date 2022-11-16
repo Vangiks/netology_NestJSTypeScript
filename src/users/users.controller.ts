@@ -15,7 +15,7 @@ import { IDocumentUser } from './model';
 import { UserValidationPipe } from './validation';
 import { userCreateSchema, userSigninSchema } from './validation/schema';
 import { AuthService } from '../auth/auth.service';
-import { JwtAuthGuard } from 'src/auth/auth.guard';
+import { JwtAuthGuard } from '../auth/auth.guard';
 
 @Controller('users')
 export class UsersController {

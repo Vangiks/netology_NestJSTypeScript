@@ -11,14 +11,14 @@ import {
   InternalServerErrorException,
   UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/auth.guard';
+import { JwtAuthGuard } from '../auth/auth.guard';
 import { BooksService } from './books.service';
 import { ICreateBook, IUpdateBook } from './dto';
 import { IDocumentBook } from './model';
 import { BookValidationPipe } from './validation';
-import { bookSchema } from './validation/schema';
+import { bookCreateSchema, bookUpdateSchema } from './validation/schema';
 
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 @Controller('books')
 export class BooksController {
   constructor(private booksService: BooksService) {}
@@ -41,9 +41,10 @@ export class BooksController {
     return book;
   }
 
-  @UsePipes(new BookValidationPipe(bookSchema))
   @Post()
-  async createBook(@Body() book: ICreateBook): Promise<IDocumentBook> {
+  async createBook(
+    @Body(new BookValidationPipe(bookCreateSchema)) book: ICreateBook,
+  ): Promise<IDocumentBook> {
     const result = await this.booksService.createBook(book);
     if (result) {
       return result;
@@ -52,11 +53,10 @@ export class BooksController {
     }
   }
 
-  @UsePipes(new BookValidationPipe(bookSchema))
   @Put(':id')
   async updateBook(
     @Param('id') id: string,
-    @Body() book: IUpdateBook,
+    @Body(new BookValidationPipe(bookUpdateSchema)) book: IUpdateBook,
   ): Promise<IDocumentBook> {
     let updateBook = await this.booksService.updateBook(id, book);
     if (updateBook) {
