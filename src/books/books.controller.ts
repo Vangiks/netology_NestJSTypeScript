@@ -18,7 +18,7 @@ import { IDocumentBook } from './model';
 import { BookValidationPipe } from './validation';
 import { bookCreateSchema, bookUpdateSchema } from './validation/schema';
 
-// @UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard)
 @Controller('books')
 export class BooksController {
   constructor(private booksService: BooksService) {}
