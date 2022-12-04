@@ -1,36 +1,79 @@
 const express = require('express');
-const serverless = require('serverless-http');
-const fetch = require('node-fetch');
+const passport = require('passport');
+const YandexStrategy = require('passport-yandex').Strategy;
 
-const app = express();
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+const config = require('./config');
 
-app.get('/api/characters', async (request, response) => {
-  const { id } = request.query;
-
-  let url = `https://netology-api-marvel.herokuapp.com/characters`;
-  if (id) {
-    url += `/${id}`;
+function isAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
   }
+  res.redirect('/');
+}
 
-  let result = await fetch(url).then((response) => response.json());
-
-  if (result && !result?.code) {
-    if (Array.isArray(result)) {
-      result = result.map((res) => ({
-        id: res?.id,
-        name: res?.name,
-        description: res?.description,
-        modified: res?.modified,
-        thumbnail: res?.thumbnail,
-        comics: res?.comics,
-      }));
-    }
-    response.status(200).send(result);
-  } else {
-    response.status(404).send({ code: 404, message: 'Character not found' });
-  }
+passport.serializeUser((user, done) => {
+  done(null, user);
 });
 
-module.exports.handler = serverless(app);
+passport.deserializeUser((obj, done) => {
+  done(null, obj);
+});
+
+passport.use(
+  new YandexStrategy(
+    {
+      clientID: config.yandexClientId,
+      clientSecret: config.yandexClienSecret,
+      callbackURL: config.yandexCallbackUrl,
+    },
+    (accessToken, refreshToken, profile, done) => {
+      process.nextTick(() => {
+        return done(null, profile);
+      });
+    }
+  )
+);
+
+const app = express();
+app.use(require('cookie-parser')());
+app.use(
+  require('express-session')({
+    secret: process.env.COOKIE_SECRET || 'COOKIE_SECRET',
+  })
+);
+
+app.set('view engine', 'ejs');
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.get('/', (req, res) => {
+  res.render('index', { user: req.user });
+});
+
+app.get('/profile', isAuthenticated, (req, res) => {
+  res.json({ user: req.user });
+});
+
+app.get('/login', passport.authenticate('yandex'));
+
+app.get(
+  '/login/callback',
+  passport.authenticate('yandex', { failureRedirect: '/' }),
+  (req, res) => {
+    res.redirect('/');
+  }
+);
+
+app.get('/logout', (request, response, next) => {
+  request.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+    response.redirect('/profile');
+  });
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`server start http://localhost:${PORT}`);
+});
