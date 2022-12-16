@@ -8,6 +8,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import configuration from '../config';
 import { MongoMemoryServer } from 'mongodb-memory-server';
+import { HotelModule } from './hotel/hotel.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
     }),
     // BooksModule,
     UsersModule,
+    HotelModule,
     // BookCommentsModule,
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
