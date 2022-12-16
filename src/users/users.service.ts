@@ -12,7 +12,7 @@ export class UsersService {
     @InjectModel(User.name) private UserModel: Model<IDocumentUser>,
   ) {}
 
-  async create(data: IUser): Promise<IDocumentUser | null> {
+  async create(data: Partial<IUser>): Promise<IDocumentUser | null> {
     try {
       const newUser: IDocumentUser = new this.UserModel(data);
       return newUser.save();
