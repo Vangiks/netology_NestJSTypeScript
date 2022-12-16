@@ -54,10 +54,11 @@ export class UsersService {
         name: { $regex: params.name },
         email: { $regex: params.email },
         contactPhone: { $regex: params.contactPhone },
-        limit: { $regex: params.limit },
-        offset: { $regex: params.offset },
       };
-      return this.UserModel.find(filter).select('-__v');
+      return this.UserModel.find(filter)
+        .select('-__v')
+        .skip(params.offset)
+        .limit(params.limit);
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.log(error.message);
