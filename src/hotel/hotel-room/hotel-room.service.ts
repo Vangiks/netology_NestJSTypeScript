@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { TID } from 'src/types';
 import { HotelRoom, IDocumentHotelRoom } from './model';
-import { IHotelRoom, ISearchRoomsParams } from './types';
+import { ICreateHotelRoom, IUpdateHotelRoom, ISearchRoomsParams } from './dto';
 
 @Injectable()
 export class HotelRoomService {
@@ -12,7 +12,7 @@ export class HotelRoomService {
     private HotelRoomModel: Model<IDocumentHotelRoom>,
   ) {}
 
-  async create(data: Partial<IHotelRoom>): Promise<IDocumentHotelRoom | null> {
+  async create(data: ICreateHotelRoom): Promise<IDocumentHotelRoom | null> {
     try {
       const newHotelRoom: IDocumentHotelRoom = new this.HotelRoomModel(data);
       return newHotelRoom.save();
@@ -59,7 +59,7 @@ export class HotelRoomService {
 
   async update(
     id: TID,
-    data: Partial<IHotelRoom>,
+    data: IUpdateHotelRoom,
   ): Promise<IDocumentHotelRoom | null> {
     try {
       return this.HotelRoomModel.findByIdAndUpdate(id, data);

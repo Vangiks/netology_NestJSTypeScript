@@ -1,12 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, HydratedDocument, ObjectId } from 'mongoose';
-import { IHotelRoom } from '../types';
 
 export interface IDocumentHotelRoom extends Document, HotelRoom {}
 export type HotelRoomDocument = HydratedDocument<HotelRoom>;
 
 @Schema()
-export class HotelRoom implements Omit<IHotelRoom, 'hotel'> {
+export class HotelRoom {
   @Prop({ required: true })
   public hotel: { type: ObjectId; ref: 'Hotel' };
 
