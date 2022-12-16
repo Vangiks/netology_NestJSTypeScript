@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, HydratedDocument, ObjectId } from 'mongoose';
-import { ISupportRequest, IMessage } from '../types';
 
 export interface IDocumentSupportRequest extends Document, SupportRequest {}
 export type SupportRequestDocument = HydratedDocument<SupportRequest>;
@@ -9,7 +8,7 @@ export interface IDocumentMessage extends Document, Message {}
 export type MessageDocument = HydratedDocument<Message>;
 
 @Schema()
-export class SupportRequest implements Omit<ISupportRequest, 'messages'> {
+export class SupportRequest {
   @Prop({ required: true })
   public user: ObjectId;
 
@@ -24,7 +23,7 @@ export class SupportRequest implements Omit<ISupportRequest, 'messages'> {
 }
 
 @Schema()
-export class Message implements IMessage {
+export class Message {
   @Prop({ required: true })
   public author: ObjectId;
 
