@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { IReservation, IReservationSearchOptions } from './types';
+import { ICreateReservation, IReservationSearchOptions } from './dto';
 import { IDocumentReservation, Reservation } from './model';
 import { TID } from 'src/types';
 
@@ -13,7 +13,7 @@ export class ReservationService {
   ) {}
 
   async addReservation(
-    data: IReservation,
+    data: ICreateReservation,
   ): Promise<IDocumentReservation | null> {
     try {
       const filter: IReservationSearchOptions = {
