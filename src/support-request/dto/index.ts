@@ -5,11 +5,11 @@ export interface ICreateSupportRequestDto extends Pick<SupportRequest, 'user'> {
   text: string;
 }
 
-export interface SendMessageDto extends Pick<Message, 'author' | 'text'> {
+export interface ISendMessageDto extends Pick<Message, 'author' | 'text'> {
   supportRequest: TID;
 }
 
-export interface MarkMessagesAsReadDto extends Pick<SupportRequest, 'user'> {
+export interface IMarkMessagesAsReadDto extends Pick<SupportRequest, 'user'> {
   supportRequest: TID;
   createdBefore: Date;
 }
