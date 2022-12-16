@@ -10,6 +10,7 @@ import configuration from '../config';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { HotelModule } from './hotel/hotel.module';
 import { ReservationModule } from './reservation/reservation.module';
+import { SupportRequestModule } from './support-request/support-request.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ReservationModule } from './reservation/reservation.module';
     UsersModule,
     HotelModule,
     ReservationModule,
+    SupportRequestModule,
     // BookCommentsModule,
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
