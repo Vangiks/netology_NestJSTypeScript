@@ -9,6 +9,7 @@ import { AppService } from './app.service';
 import configuration from '../config';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { HotelModule } from './hotel/hotel.module';
+import { ReservationModule } from './reservation/reservation.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { HotelModule } from './hotel/hotel.module';
     // BooksModule,
     UsersModule,
     HotelModule,
+    ReservationModule,
     // BookCommentsModule,
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
