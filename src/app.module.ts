@@ -15,9 +15,9 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
       load: [configuration],
       isGlobal: true,
     }),
-    BooksModule,
+    // BooksModule,
     UsersModule,
-    BookCommentsModule,
+    // BookCommentsModule,
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => {

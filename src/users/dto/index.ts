@@ -1,9 +1,3 @@
-export interface IUser {
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-}
+import { IUser } from '../types';
 
-export interface ICreateUser extends IUser {}
-export interface ISigninUser extends Pick<IUser, 'email' | 'password'> {}
+export interface ICreateUser extends Partial<IUser> {}
