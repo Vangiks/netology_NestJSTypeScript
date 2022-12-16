@@ -1,10 +1,9 @@
+import { TID } from 'src/types';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { IDocumentUser, User } from './model';
-import { IUser, ISearchUserParams } from './types';
-
-import { TID } from '../types';
+import { ICreateUser, ISearchUserParams } from './dto';
 
 @Injectable()
 export class UsersService {
@@ -12,7 +11,7 @@ export class UsersService {
     @InjectModel(User.name) private UserModel: Model<IDocumentUser>,
   ) {}
 
-  async create(data: Partial<IUser>): Promise<IDocumentUser | null> {
+  async create(data: ICreateUser): Promise<IDocumentUser | null> {
     try {
       const newUser: IDocumentUser = new this.UserModel(data);
       return newUser.save();
