@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { ICreateUser } from 'src/users/dto';
 import { IDocumentUser } from 'src/users/model';
-import { ERole } from 'src/users/types';
+import { ERole, Roles } from 'src/users/types';
 import { AuthService } from '../auth/auth.service';
 import { UsersService } from '../users/users.service';
 import { JwtAuthGuard } from './auth.guard';
@@ -19,6 +19,7 @@ import { LocalAuthGuard } from './local.guard';
 import { Response } from 'express';
 import { loginSchema, registerSchema } from './validation/schema';
 import { AuthValidationPipe } from './validation';
+import { RolesGuard } from 'src/users/roles.guard';
 
 @Controller()
 export class AuthController {
@@ -50,10 +51,9 @@ export class AuthController {
     return { access_token: jwtToken };
   }
 
-  @Post(':role/register')
+  @Post('client/register')
   async register(
     @Body(new AuthValidationPipe(registerSchema)) user: IRegisterUser,
-    @Param('role') role: ERole,
   ): Promise<{ id: string; email: string; name: string }> {
     await this.authService.checkUserByEmail(user);
     const createUser: ICreateUser = {
@@ -61,7 +61,7 @@ export class AuthController {
       contactPhone: user.contactPhone,
       email: user.email,
       passwordHash: await this.authService.getPasswordHash(user.password),
-      role: role,
+      role: ERole.Client,
     };
     const registerUser = await this.usersService.create(createUser);
     return {
@@ -79,7 +79,8 @@ export class AuthController {
   }
 
   // TODO убрать
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(ERole.Admin, ERole.Manager)
   @Get('auth/me')
   async me(@Request() request) {
     return request.user;

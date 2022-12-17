@@ -1,5 +1,2 @@
-export enum ERole {
-  Client = 'client',
-  Admin = 'admin',
-  Manager = 'manager',
-}
+export * from './roles.enum';
+export * from './roles.decorators';
