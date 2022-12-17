@@ -1,13 +1,18 @@
 import * as Joi from 'joi';
+import { ERole } from 'src/users/types';
 
-export const userCreateSchema = Joi.object().keys({
+export const createUserSchema = Joi.object().keys({
   email: Joi.string().email().required(),
   password: Joi.string().required(),
-  firstName: Joi.string().required(),
-  lastName: Joi.string().required(),
+  name: Joi.string().required(),
+  contactPhone: Joi.string().optional(),
+  role: Joi.valid(...Object.values(ERole)),
 });
 
-export const userSigninSchema = Joi.object().keys({
-  email: Joi.string().email().required(),
-  password: Joi.string().required(),
+export const searchUserParamsSchema = Joi.object().keys({
+  email: Joi.string().required(),
+  name: Joi.string().required(),
+  contactPhone: Joi.string().optional(),
+  limit: Joi.number().strict().required(),
+  offset: Joi.number().strict().required(),
 });

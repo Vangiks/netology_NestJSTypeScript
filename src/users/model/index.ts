@@ -18,10 +18,24 @@ export class User {
   public name: string;
 
   @Prop()
-  public contactPhone: string;
+  public contactPhone?: string;
 
   @Prop({ required: true, default: ERole.Client })
   public role: ERole;
 }
 
-export const UserModel = SchemaFactory.createForClass(User);
+const UserModel = SchemaFactory.createForClass(User);
+
+UserModel.method('toJSON', function () {
+  const { __v, _id, ...object } = this.toObject();
+  let _object = object;
+  if (_id) {
+    _object = { id: _id, ..._object };
+  }
+  if (__v) {
+    _object = { id: _id, ..._object, __v };
+  }
+  return _object;
+});
+
+export { UserModel };

@@ -1,13 +1,8 @@
-import {
-  BadRequestException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { IDocumentUser } from 'src/users/model';
 import { UsersService } from 'src/users/users.service';
 import { IJWTPayload, IRegisterUser } from './dto';
-import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
@@ -30,7 +25,7 @@ export class AuthService {
     }
 
     if (typeof password !== 'undefined') {
-      const isCorectPassword = await this.isValidPassword(
+      const isCorectPassword = await this.usersService.isValidPassword(
         password,
         findUser.passwordHash,
       );
@@ -45,26 +40,9 @@ export class AuthService {
     return this.jwtService.sign(payload);
   }
 
-  async checkUserByEmail(user: IRegisterUser): Promise<void> {
-    const findUser = await this.usersService.findByEmail(user.email);
-    if (findUser) {
-      throw new BadRequestException(
-        'Пользователя с указанным E-mail уже существует',
-      );
-    }
-  }
-
   getJwtCookie(jwtToken: string): string {
     return `Authentication=${jwtToken}; HttpOnly; Path=/; Max-Age=${this.configService.get(
       'JWT_EXPIRATION_TIME',
     )}`;
-  }
-
-  async getPasswordHash(password: string, saltOrRounds = 10): Promise<string> {
-    return await bcrypt.hash(password, saltOrRounds);
-  }
-
-  async isValidPassword(password: string, hash: string): Promise<boolean> {
-    return await bcrypt.compare(password, hash);
   }
 }

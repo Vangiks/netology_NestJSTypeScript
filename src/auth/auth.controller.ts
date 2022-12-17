@@ -2,7 +2,6 @@ import {
   Controller,
   Post,
   Body,
-  Param,
   UseGuards,
   Request,
   Get,
@@ -55,12 +54,11 @@ export class AuthController {
   async register(
     @Body(new AuthValidationPipe(registerSchema)) user: IRegisterUser,
   ): Promise<{ id: string; email: string; name: string }> {
-    await this.authService.checkUserByEmail(user);
     const createUser: ICreateUser = {
       name: user.name,
       contactPhone: user.contactPhone,
       email: user.email,
-      passwordHash: await this.authService.getPasswordHash(user.password),
+      password: user.password,
       role: ERole.Client,
     };
     const registerUser = await this.usersService.create(createUser);
