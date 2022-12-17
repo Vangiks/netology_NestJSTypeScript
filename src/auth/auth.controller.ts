@@ -75,12 +75,4 @@ export class AuthController {
     response.setHeader('Set-Cookie', this.authService.getJwtCookie(null));
     return null;
   }
-
-  // TODO убрать
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(ERole.Admin, ERole.Manager)
-  @Get('auth/me')
-  async me(@Request() request) {
-    return request.user;
-  }
 }
