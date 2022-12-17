@@ -54,10 +54,6 @@ export class AuthService {
     }
   }
 
-  // logout(payload: IJWTPayload) {
-  //   return this.jwtService.lo(payload);
-  // }
-
   getJwtCookie(jwtToken: string): string {
     return `Authentication=${jwtToken}; HttpOnly; Path=/; Max-Age=${this.configService.get(
       'JWT_EXPIRATION_TIME',

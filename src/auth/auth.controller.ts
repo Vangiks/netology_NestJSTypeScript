@@ -17,6 +17,8 @@ import { JwtAuthGuard } from './auth.guard';
 import { IJWTPayload, IRegisterUser } from './dto';
 import { LocalAuthGuard } from './local.guard';
 import { Response } from 'express';
+import { loginSchema, registerSchema } from './validation/schema';
+import { AuthValidationPipe } from './validation';
 
 @Controller()
 export class AuthController {
@@ -26,11 +28,11 @@ export class AuthController {
   ) {}
 
   @UseGuards(LocalAuthGuard)
-  // TODO Validate
-  //   @UsePipes(new UserValidationPipe(userSigninSchema))
   @Post('auth/login')
   async login(
-    @Request() request,
+    @Body(new AuthValidationPipe(loginSchema)) _body,
+    @Request()
+    request,
     @Res({ passthrough: true }) response: Response,
   ): Promise<{ access_token: string }> {
     const user: IDocumentUser = request.user;
@@ -48,13 +50,11 @@ export class AuthController {
     return { access_token: jwtToken };
   }
 
-  // TODO Validate
-  // @UsePipes(new UserValidationPipe(userCreateSchema))
   @Post(':role/register')
   async register(
-    @Body() user: IRegisterUser,
+    @Body(new AuthValidationPipe(registerSchema)) user: IRegisterUser,
     @Param('role') role: ERole,
-  ): Promise<any> {
+  ): Promise<{ id: string; email: string; name: string }> {
     await this.authService.checkUserByEmail(user);
     const createUser: ICreateUser = {
       name: user.name,
