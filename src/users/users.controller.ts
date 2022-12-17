@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { ICreateUser, ISigninUser } from './dto';
+import { ICreateUser } from './dto';
 import { IDocumentUser } from './model';
 import { UserValidationPipe } from './validation';
 import { userCreateSchema, userSigninSchema } from './validation/schema';

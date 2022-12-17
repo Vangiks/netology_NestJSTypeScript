@@ -3,13 +3,15 @@ import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
 import { ResponseInterceptor } from '../interceptors/response';
 import { ResponseExceptionFilter } from '../exceptions-filters/response';
-// import { MongoExceptionFilter } from '../exceptions-filters/mongo';
+import { GLOBAL_PREFIX } from './constants';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
+  app.setGlobalPrefix(GLOBAL_PREFIX);
   app.useGlobalInterceptors(new ResponseInterceptor());
   app.useGlobalFilters(new ResponseExceptionFilter());
-  // app.useGlobalFilters(new MongoExceptionFilter());
+  app.use(cookieParser());
   const configService = app.get(ConfigService);
   const port = configService.get<string>('PORT');
   if (port) {

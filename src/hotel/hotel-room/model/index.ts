@@ -1,13 +1,14 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, HydratedDocument, ObjectId } from 'mongoose';
+import { Document, HydratedDocument, Schema as Schemas } from 'mongoose';
+import { Hotel } from '../../model';
 
 export interface IDocumentHotelRoom extends Document, HotelRoom {}
 export type HotelRoomDocument = HydratedDocument<HotelRoom>;
 
 @Schema()
 export class HotelRoom {
-  @Prop({ required: true })
-  public hotel: { type: ObjectId; ref: 'Hotel' };
+  @Prop({ required: true, type: Schemas.Types.ObjectId, ref: Hotel.name })
+  public hotel: string;
 
   @Prop({ required: true })
   public description: string;
