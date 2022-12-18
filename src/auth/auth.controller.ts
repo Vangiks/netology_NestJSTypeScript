@@ -4,7 +4,6 @@ import {
   Body,
   UseGuards,
   Request,
-  Get,
   Res,
 } from '@nestjs/common';
 import { ICreateUser } from 'src/users/dto';
