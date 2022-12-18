@@ -1,9 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, PopulateOption, QueryOptions } from 'mongoose';
 import { TID } from 'src/types';
 import { HotelRoom, IDocumentHotelRoom } from './model';
-import { ICreateHotelRoom, IUpdateHotelRoom, ISearchRoomsParams } from './dto';
+import {
+  ICreateHotelRoom,
+  IUpdateHotelRoom,
+  ISearchHotelRoomsParams,
+} from './dto';
 
 @Injectable()
 export class HotelRoomService {
@@ -14,7 +18,17 @@ export class HotelRoomService {
 
   async create(data: ICreateHotelRoom): Promise<IDocumentHotelRoom | null> {
     try {
-      const newHotelRoom: IDocumentHotelRoom = new this.HotelRoomModel(data);
+      const hotelRoom: HotelRoom = {
+        hotel: data.hotelId,
+        description: data.description,
+        images: data.images,
+        isEnabled: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      const newHotelRoom: IDocumentHotelRoom = new this.HotelRoomModel(
+        hotelRoom,
+      );
       return newHotelRoom.save();
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -36,17 +50,22 @@ export class HotelRoomService {
   }
 
   async search(
-    params: ISearchRoomsParams,
+    params: ISearchHotelRoomsParams,
+    select?: string,
+    populate?: PopulateOption,
   ): Promise<Array<IDocumentHotelRoom> | null> {
     try {
-      const filter: Pick<ISearchRoomsParams, 'hotel' | 'isEnabled'> = {
-        hotel: params.hotel,
-      };
       if (params.isEnabled) {
-        filter.isEnabled = params.isEnabled;
+        params.isEnabled = params.isEnabled;
       }
-      return this.HotelRoomModel.find(filter)
-        .select('-__v')
+      const selectedHotelRoom = this.HotelRoomModel.find(params).select('-__v');
+
+      if (populate) {
+        // selectedHotelRoom.populate(populate);
+      }
+
+      return selectedHotelRoom
+        .select('-__v' + select ? ' ' + select : '')
         .skip(params.offset)
         .limit(params.limit);
     } catch (error: unknown) {
@@ -60,9 +79,14 @@ export class HotelRoomService {
   async update(
     id: TID,
     data: IUpdateHotelRoom,
+    options: QueryOptions = { new: false },
   ): Promise<IDocumentHotelRoom | null> {
     try {
-      return this.HotelRoomModel.findByIdAndUpdate(id, data);
+      return this.HotelRoomModel.findByIdAndUpdate(
+        id,
+        { ...data, updatedAt: new Date() },
+        options,
+      );
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.log(error.message);

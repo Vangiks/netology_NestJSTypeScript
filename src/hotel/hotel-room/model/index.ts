@@ -14,7 +14,7 @@ export class HotelRoom {
   public description: string;
 
   @Prop({ default: [] })
-  public images: Array<string>;
+  public images?: Array<string>;
 
   @Prop({ required: true })
   public createdAt: Date;
