@@ -5,7 +5,6 @@ export interface ISearchHotelParams extends Pick<Hotel, 'title'> {
   offset: number;
 }
 
-export interface ICreateHotel extends Partial<Hotel> {}
+export interface ICreateHotel extends Pick<Hotel, 'title' | 'description'> {}
 
-export interface IUpdateHotelParams
-  extends Pick<Hotel, 'title' | 'description'> {}
+export interface IUpdateHotel extends Pick<Hotel, 'title' | 'description'> {}

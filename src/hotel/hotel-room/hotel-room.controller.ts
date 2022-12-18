@@ -1,4 +1,14 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
+import { Post } from '@nestjs/common/decorators';
+import { HotelRoomService } from './hotel-room.service';
 
-@Controller('hotel-room')
-export class HotelRoomController {}
+@Controller()
+export class HotelRoomController {
+  constructor(private readonly hotelRoomService: HotelRoomService) {}
+
+  //   @Post('admin/hotel-rooms')
+  //   async createHotelRoom() {
+  //     const newHotelRoom = await this.hotelRoomService.create();
+
+  //   }
+}

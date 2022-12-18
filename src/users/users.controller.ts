@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Post,
-  Body,
-  Get,
-  UseGuards,
-  Query,
-} from '@nestjs/common';
+import { Controller, Post, Body, Get, UseGuards, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ICreateUser, ISearchUserParams } from './dto';
 import {} from './model';
@@ -24,7 +17,7 @@ export class UsersController {
   @Post('admin/users')
   async createUser(
     @Body(new UserValidationPipe(createUserSchema)) user: ICreateUser,
-  ): Promise<any> {
+  ) {
     const newUser = await this.usersService.create(user);
     return {
       id: newUser._id,
@@ -41,7 +34,7 @@ export class UsersController {
   async getAdminUsers(
     @Query(new UserValidationPipe(searchUserParamsSchema))
     params: ISearchUserParams,
-  ): Promise<any> {
+  ) {
     return await this.usersService.findAll(params, 'email name contactPhone');
   }
 
@@ -51,7 +44,7 @@ export class UsersController {
   async getManagerUsers(
     @Query(new UserValidationPipe(searchUserParamsSchema))
     params: ISearchUserParams,
-  ): Promise<any> {
+  ) {
     return await this.usersService.findAll(params, 'email name contactPhone');
   }
 }

@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, QueryOptions } from 'mongoose';
 import { TID } from 'src/types';
 import { Hotel, IDocumentHotel } from './model';
-import { ICreateHotel, ISearchHotelParams, IUpdateHotelParams } from './dto';
+import { ICreateHotel, ISearchHotelParams, IUpdateHotel } from './dto';
 
 @Injectable()
 export class HotelService {
@@ -13,7 +13,13 @@ export class HotelService {
 
   async create(data: ICreateHotel): Promise<IDocumentHotel | null> {
     try {
-      const newHotel: IDocumentHotel = new this.HotelModel(data);
+      const hotel: Hotel = {
+        title: data.title,
+        description: data.description,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      const newHotel: IDocumentHotel = new this.HotelModel(hotel);
       return newHotel.save();
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -36,13 +42,14 @@ export class HotelService {
 
   async search(
     params: ISearchHotelParams,
+    select?: string,
   ): Promise<Array<IDocumentHotel> | null> {
     try {
       const filter = {
         title: { $regex: params.title },
       };
       return this.HotelModel.find(filter)
-        .select('-__v')
+        .select('-__v' + select ? ' ' + select : '')
         .skip(params.offset)
         .limit(params.limit);
     } catch (error: unknown) {
@@ -55,10 +62,16 @@ export class HotelService {
 
   async update(
     id: TID,
-    data: IUpdateHotelParams,
+    data: IUpdateHotel,
+    options: QueryOptions = { new: false },
   ): Promise<IDocumentHotel | null> {
     try {
-      return this.HotelModel.findByIdAndUpdate(id, data);
+      const updateHotel = {
+        title: data.title,
+        description: data.description,
+        updatedAt: new Date(),
+      };
+      return this.HotelModel.findByIdAndUpdate(id, updateHotel, options);
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.log(error.message);
