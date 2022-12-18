@@ -21,16 +21,6 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
       ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
 
-  # counter-books:
-  #   image: vangiks/counter-books:1.0.0
-  #   ports:
-  #     - '3002:3002'
-  #   environment:
-  #     - PORT=3002
-  #     - REDIS_HOST=redis://storage
-  #   depends_on:
-  #     - storage
-
   # library:
   #   build: .
   #   ports:

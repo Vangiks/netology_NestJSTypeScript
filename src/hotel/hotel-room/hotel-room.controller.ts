@@ -92,7 +92,6 @@ export class HotelRoomController {
     };
   }
 
-  // TODO Validation
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(ERole.Admin)
   @Put('admin/hotel-rooms/:id')
