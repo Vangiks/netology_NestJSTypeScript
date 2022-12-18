@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Post,
-  Body,
-  UseGuards,
-  Request,
-  Res,
-} from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Req, Res } from '@nestjs/common';
 import { ICreateUser } from 'src/users/dto';
 import { IDocumentUser } from 'src/users/model';
 import { ERole, Roles } from 'src/users/types';
@@ -17,7 +10,6 @@ import { LocalAuthGuard } from './local.guard';
 import { Response } from 'express';
 import { loginSchema, registerSchema } from './validation/schema';
 import { AuthValidationPipe } from './validation';
-import { RolesGuard } from 'src/users/roles.guard';
 
 @Controller()
 export class AuthController {
@@ -30,7 +22,7 @@ export class AuthController {
   @Post('auth/login')
   async login(
     @Body(new AuthValidationPipe(loginSchema)) _body,
-    @Request()
+    @Req()
     request,
     @Res({ passthrough: true }) response: Response,
   ): Promise<{ access_token: string }> {
