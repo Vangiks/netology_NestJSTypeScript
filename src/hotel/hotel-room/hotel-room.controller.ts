@@ -23,17 +23,23 @@ import {
 } from './dto';
 import { HotelRoomService } from './hotel-room.service';
 import { AllowAnonymous } from 'decorators';
+import { HotelRoomValidationPipe } from './validation';
+import {
+  createHotelRoomSchema,
+  searchHotelRoomParamsSchema,
+  updateHotelRoomSchema,
+} from './validation/schema';
 
 @Controller()
 export class HotelRoomController {
   constructor(private readonly hotelRoomService: HotelRoomService) {}
 
-  // TODO Validation
   @AllowAnonymous()
   @UseGuards(JwtAuthGuard)
   @Get('common/hotel-rooms')
   async searchHotelRoom(
-    @Query() params: ISearchHotelRoomsParams,
+    @Query(new HotelRoomValidationPipe(searchHotelRoomParamsSchema))
+    params: ISearchHotelRoomsParams,
     @Req()
     request,
   ) {
@@ -47,7 +53,6 @@ export class HotelRoomController {
     return await this.hotelRoomService.search(filter, 'id description images');
   }
 
-  // TODO Validation
   @Get('common/hotel-rooms/:id')
   async getHotelRoom(@Param('id', new ParseObjectIdPipe()) id: string) {
     const newHotelRoom = await (
@@ -61,13 +66,13 @@ export class HotelRoomController {
     };
   }
 
-  // TODO Validation
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(ERole.Admin)
   @Post('admin/hotel-rooms')
   @UseInterceptors(FilesInterceptor('images'))
   async createHotelRoom(
-    @Body() hotelRoom: ICreateHotelRoom,
+    @Body(new HotelRoomValidationPipe(createHotelRoomSchema))
+    hotelRoom: ICreateHotelRoom,
     @UploadedFiles(new MulterFileBase64Pipe()) images: Array<string>,
   ) {
     const data: ICreateHotelRoom = {
@@ -94,7 +99,8 @@ export class HotelRoomController {
   @UseInterceptors(FilesInterceptor('images'))
   async updateHotelRoom(
     @Param('id', new ParseObjectIdPipe()) id: string,
-    @Body() hotelRoom: IUpdateHotelRoom,
+    @Body(new HotelRoomValidationPipe(updateHotelRoomSchema))
+    hotelRoom: IUpdateHotelRoom,
     @UploadedFiles(new MulterFileBase64Pipe())
     images: Array<string>,
   ) {
