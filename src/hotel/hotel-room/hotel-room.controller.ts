@@ -12,8 +12,7 @@ import {
   Query,
 } from '@nestjs/common/decorators';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { MulterFileBase64Pipe } from 'pipes/multer-file-base64.pipe';
-import { ParseObjectIdPipe } from 'pipes/mongo';
+import { MulterFileBase64Pipe, ParseObjectIdPipe } from 'pipes';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { RolesGuard } from 'src/users/roles.guard';
 import { ERole, Roles } from 'src/users/types';

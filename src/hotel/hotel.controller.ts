@@ -8,7 +8,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ParseObjectIdPipe } from 'pipes/mongo';
+import { ParseObjectIdPipe } from 'pipes';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { RolesGuard } from 'src/users/roles.guard';
 import { ERole, Roles } from 'src/users/types';
