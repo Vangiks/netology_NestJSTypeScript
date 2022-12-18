@@ -4,6 +4,7 @@ import {
   Body,
   Get,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ICreateUser, ISearchUserParams } from './dto';
@@ -38,7 +39,7 @@ export class UsersController {
   @Roles(ERole.Admin)
   @Get('admin/users')
   async getAdminUsers(
-    @Body(new UserValidationPipe(searchUserParamsSchema))
+    @Query(new UserValidationPipe(searchUserParamsSchema))
     params: ISearchUserParams,
   ): Promise<any> {
     return await this.usersService.findAll(params, 'email name contactPhone');
@@ -48,7 +49,7 @@ export class UsersController {
   @Roles(ERole.Manager)
   @Get('manager/users')
   async getManagerUsers(
-    @Body(new UserValidationPipe(searchUserParamsSchema))
+    @Query(new UserValidationPipe(searchUserParamsSchema))
     params: ISearchUserParams,
   ): Promise<any> {
     return await this.usersService.findAll(params, 'email name contactPhone');

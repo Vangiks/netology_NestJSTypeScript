@@ -13,6 +13,6 @@ export const searchUserParamsSchema = Joi.object().keys({
   email: Joi.string().required(),
   name: Joi.string().required(),
   contactPhone: Joi.string().optional(),
-  limit: Joi.number().strict().required(),
-  offset: Joi.number().strict().required(),
+  limit: Joi.number().required(),
+  offset: Joi.number().required(),
 });
