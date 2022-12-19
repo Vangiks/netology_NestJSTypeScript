@@ -6,11 +6,12 @@ import { RolesGuard } from 'src/users/roles.guard';
 import { ERole, Roles } from 'src/users/types';
 import { ICreateReservation, IReservationSearchOptions } from './dto';
 import { ReservationService } from './reservation.service';
+import { ReservationValidationPipe } from './validation';
+import { createReservationSchema } from './validation/schema';
 @Controller()
 export class ReservationController {
   constructor(private readonly reservationService: ReservationService) {}
 
-  // TODO Validation
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(ERole.Client)
   @Get('client/reservations')
@@ -35,7 +36,6 @@ export class ReservationController {
     }));
   }
 
-  // TODO Validation
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(ERole.Manager)
   @Get('manager/reservations/:userId')
@@ -62,20 +62,20 @@ export class ReservationController {
     }));
   }
 
-  // TODO Validation
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(ERole.Client)
   @Post('client/reservations')
   async addReservationCurrentUser(
-    @Body() reservation: ICreateReservation,
+    @Body(new ReservationValidationPipe(createReservationSchema))
+    reservation: ICreateReservation,
     @Req() request,
   ) {
     const user = request.user;
     const data = {
       userId: user.id,
       roomId: reservation.hotelRoom,
-      dateStart: new Date(reservation.startDate),
-      dateEnd: new Date(reservation.endDate),
+      dateStart: reservation.startDate,
+      dateEnd: reservation.endDate,
     };
     const newReservation = await (
       await this.reservationService.addReservation(data)
@@ -91,7 +91,6 @@ export class ReservationController {
     };
   }
 
-  // TODO Validation
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(ERole.Client)
   @Delete('client/reservations/:id')
@@ -104,7 +103,6 @@ export class ReservationController {
     return null;
   }
 
-  // TODO Validation
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(ERole.Manager)
   @Delete('manager/reservations/:id')
