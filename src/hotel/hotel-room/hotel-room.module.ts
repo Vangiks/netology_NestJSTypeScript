@@ -12,5 +12,6 @@ import { HotelRoom, HotelRoomModel } from './model';
   ],
   controllers: [HotelRoomController],
   providers: [HotelRoomService],
+  exports: [HotelRoomService],
 })
 export class HotelRoomModule {}

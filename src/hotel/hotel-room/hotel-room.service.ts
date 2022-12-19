@@ -52,17 +52,12 @@ export class HotelRoomService {
   async search(
     params: ISearchHotelRoomsParams,
     select?: string,
-    populate?: PopulateOption,
   ): Promise<Array<IDocumentHotelRoom> | null> {
     try {
       if (params.isEnabled) {
         params.isEnabled = params.isEnabled;
       }
       const selectedHotelRoom = this.HotelRoomModel.find(params).select('-__v');
-
-      if (populate) {
-        // selectedHotelRoom.populate(populate);
-      }
 
       return selectedHotelRoom
         .select('-__v' + select ? ' ' + select : '')
