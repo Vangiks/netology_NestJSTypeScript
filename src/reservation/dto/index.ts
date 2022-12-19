@@ -1,10 +1,16 @@
+import { TID } from 'src/types';
 import { Reservation } from '../model';
 
-export interface ICreateReservation extends Reservation {}
+export interface ICreateReservation {
+  hotelRoom: string;
+  startDate: string;
+  endDate: string;
+}
 
 export interface IReservationSearchOptions
-  extends Omit<Reservation, 'hotelId' | 'roomId'> {
-  userId: string;
-  dateStart: Date;
-  dateEnd: Date;
+  extends Partial<Omit<Reservation, 'hotelId' | 'roomId'>> {
+  _id?: TID;
+  userId?: string;
+  dateStart?: Date;
+  dateEnd?: Date;
 }
