@@ -25,30 +25,5 @@ export class Reservation {
 }
 
 const ReservationModel = SchemaFactory.createForClass(Reservation);
-// ReservationModel.method('toJSON', function () {
-//   const { __v, _id, hotelId, roomId, dateStart, dateEnd, ...object } =
-//     this.toObject();
-//   let _object = object;
-//   if (_id) {
-//     _object = { id: _id, ..._object };
-//   }
-//   if (hotelId) {
-//     _object = { ..._object, hotel: hotelId };
-//   }
-//   if (roomId) {
-//     _object = { ..._object, hotelRoom: roomId };
-//   }
-//   if (dateStart) {
-//     _object = { ..._object, startDate: dateStart };
-//   }
-//   if (dateEnd) {
-//     _object = { ..._object, endDate: dateEnd };
-//   }
-//   if (__v) {
-//     _object = { ..._object, __v };
-//   }
-
-//   return _object;
-// });
 
 export { ReservationModel };

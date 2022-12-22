@@ -1,16 +1,16 @@
-import { HotelRoom } from '../model';
+import { IHotelRoom } from '../hotel-room.interface';
 
 export interface ICreateHotelRoom
-  extends Pick<HotelRoom, 'images' | 'description'> {
+  extends Pick<IHotelRoom, 'images' | 'description'> {
   hotelId: string;
 }
 
 export interface IUpdateHotelRoom
-  extends Partial<Pick<HotelRoom, 'images' | 'description' | 'isEnabled'>> {
+  extends Partial<Pick<IHotelRoom, 'images' | 'description' | 'isEnabled'>> {
   hotelId: string;
 }
 
-export interface ISearchHotelRoomsParams extends Pick<HotelRoom, 'hotel'> {
+export interface ISearchHotelRoomsParams extends Pick<IHotelRoom, 'hotel'> {
   limit: number;
   offset: number;
   isEnabled?: boolean;

@@ -2,23 +2,24 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, QueryOptions } from 'mongoose';
 import { TID } from 'src/common';
-import { HotelRoom, IDocumentHotelRoom } from './model';
+import { HotelRoom } from './model';
 import {
   ICreateHotelRoom,
   IUpdateHotelRoom,
   ISearchHotelRoomsParams,
 } from './dto';
+import { IHotelRoom } from './hotel-room.interface';
 
 @Injectable()
 export class HotelRoomService {
   constructor(
     @InjectModel(HotelRoom.name)
-    private HotelRoomModel: Model<IDocumentHotelRoom>,
+    private HotelRoomModel: Model<HotelRoom>,
   ) {}
 
-  async create(data: ICreateHotelRoom): Promise<IDocumentHotelRoom | null> {
+  async create(data: ICreateHotelRoom): Promise<HotelRoom | null> {
     try {
-      const hotelRoom: HotelRoom = {
+      const hotelRoom: IHotelRoom = {
         hotel: data.hotelId,
         description: data.description,
         images: data.images,
@@ -26,7 +27,7 @@ export class HotelRoomService {
         createdAt: new Date(),
         updatedAt: new Date(),
       };
-      const newHotelRoom: IDocumentHotelRoom = new this.HotelRoomModel(
+      const newHotelRoom: HotelRoom = new this.HotelRoomModel(
         hotelRoom,
       );
       return newHotelRoom.save();
@@ -38,7 +39,7 @@ export class HotelRoomService {
     }
   }
 
-  async findById(id: TID): Promise<IDocumentHotelRoom | null> {
+  async findById(id: TID): Promise<HotelRoom | null> {
     try {
       return this.HotelRoomModel.findById(id).select('-__v');
     } catch (error: unknown) {
@@ -52,7 +53,7 @@ export class HotelRoomService {
   async search(
     params: ISearchHotelRoomsParams,
     select?: string,
-  ): Promise<Array<IDocumentHotelRoom> | null> {
+  ): Promise<Array<HotelRoom> | null> {
     try {
       if (params.isEnabled) {
         params.isEnabled = params.isEnabled;
@@ -75,7 +76,7 @@ export class HotelRoomService {
     id: TID,
     data: IUpdateHotelRoom,
     options: QueryOptions = { new: false },
-  ): Promise<IDocumentHotelRoom | null> {
+  ): Promise<HotelRoom | null> {
     try {
       return this.HotelRoomModel.findByIdAndUpdate(
         id,
