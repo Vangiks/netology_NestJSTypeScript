@@ -6,8 +6,7 @@ import { UserValidationPipe } from './validation';
 import { createUserSchema, searchUserParamsSchema } from './validation/schema';
 import { JwtAuthGuard } from '../auth/auth.guard';
 import { RolesGuard } from './roles.guard';
-import { ERole } from 'src/common';
-import { Roles } from './types';
+import { ERole, Roles } from 'src/common';
 
 @Controller()
 export class UsersController {

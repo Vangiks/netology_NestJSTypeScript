@@ -8,10 +8,15 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { Pagination, IPagination, ParseObjectIdPipe, ERole } from 'src/common';
+import {
+  Pagination,
+  IPagination,
+  ParseObjectIdPipe,
+  ERole,
+  Roles,
+} from 'src/common';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { RolesGuard } from 'src/users/roles.guard';
-import { Roles } from 'src/users/types';
 import {
   GetChatListParams,
   ICreateSupportRequestDto,

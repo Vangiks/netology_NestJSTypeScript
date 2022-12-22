@@ -17,10 +17,10 @@ import {
   ParseObjectIdPipe,
   AllowAnonymous,
   ERole,
+  Roles,
 } from 'src/common';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { RolesGuard } from 'src/users/roles.guard';
-import { Roles } from 'src/users/types';
 import {
   ICreateHotelRoom,
   ISearchHotelRoomsParams,
