@@ -2,24 +2,25 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, QueryOptions } from 'mongoose';
 import { TID } from 'src/common';
-import { Hotel, IDocumentHotel } from './model';
+import { Hotel } from './model';
+import { IHotel } from './hotel.interface';
 import { ICreateHotel, ISearchHotelParams, IUpdateHotel } from './dto';
 
 @Injectable()
 export class HotelService {
   constructor(
-    @InjectModel(Hotel.name) private HotelModel: Model<IDocumentHotel>,
+    @InjectModel(Hotel.name) private HotelModel: Model<Hotel>,
   ) {}
 
-  async create(data: ICreateHotel): Promise<IDocumentHotel | null> {
+  async create(data: ICreateHotel): Promise<Hotel | null> {
     try {
-      const hotel: Hotel = {
+      const hotel: IHotel = {
         title: data.title,
         description: data.description,
         createdAt: new Date(),
         updatedAt: new Date(),
       };
-      const newHotel: IDocumentHotel = new this.HotelModel(hotel);
+      const newHotel: Hotel = new this.HotelModel(hotel);
       return newHotel.save();
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -29,7 +30,7 @@ export class HotelService {
     }
   }
 
-  async findById(id: TID): Promise<IDocumentHotel | null> {
+  async findById(id: TID): Promise<Hotel | null> {
     try {
       return this.HotelModel.findById(id).select('-__v');
     } catch (error: unknown) {
@@ -43,7 +44,7 @@ export class HotelService {
   async search(
     params: ISearchHotelParams,
     select?: string,
-  ): Promise<Array<IDocumentHotel> | null> {
+  ): Promise<Array<Hotel> | null> {
     try {
       const filter = {
         title: { $regex: params.title },
@@ -64,7 +65,7 @@ export class HotelService {
     id: TID,
     data: IUpdateHotel,
     options: QueryOptions = { new: false },
-  ): Promise<IDocumentHotel | null> {
+  ): Promise<Hotel | null> {
     try {
       const updateHotel = {
         title: data.title,
