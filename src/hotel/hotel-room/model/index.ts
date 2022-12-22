@@ -1,13 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as Schemas } from 'mongoose';
-import { TID } from 'src/common';
 import { Hotel } from '../../model';
 import { IHotelRoom } from '../hotel-room.interface';
 
 @Schema()
-export class HotelRoom extends Document implements IHotelRoom {
+export class HotelRoom extends Document implements Omit<IHotelRoom, 'hotel'> {
   @Prop({ required: true, type: Schemas.Types.ObjectId, ref: Hotel.name })
-  public hotel: TID;
+  public hotel: Hotel;
 
   @Prop({ required: true })
   public description: string;
