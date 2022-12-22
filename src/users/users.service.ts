@@ -2,17 +2,17 @@ import { TID } from 'src/common';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { IDocumentUser, User } from './model';
+import { User } from './model';
 import { ICreateUser, ISearchUserParams } from './dto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectModel(User.name) private UserModel: Model<IDocumentUser>,
+    @InjectModel(User.name) private UserModel: Model<User>,
   ) {}
 
-  async create(data: ICreateUser): Promise<IDocumentUser> {
+  async create(data: ICreateUser): Promise<User> {
     await this.checkUserByEmail(data.email);
     const user = {
       name: data.name,
@@ -21,11 +21,11 @@ export class UsersService {
       role: data.role,
       passwordHash: await this.getPasswordHash(data.password),
     };
-    const newUser: IDocumentUser = new this.UserModel(user);
+    const newUser: User = new this.UserModel(user);
     return newUser.save();
   }
 
-  async findById(id: TID): Promise<IDocumentUser | null> {
+  async findById(id: TID): Promise<User | null> {
     try {
       return this.UserModel.findById(id).select('-__v');
     } catch (error: unknown) {
@@ -36,7 +36,7 @@ export class UsersService {
     }
   }
 
-  async findByEmail(email: string): Promise<IDocumentUser | null> {
+  async findByEmail(email: string): Promise<User | null> {
     try {
       return this.UserModel.findOne({ email }).select('-__v');
     } catch (error: unknown) {
@@ -50,7 +50,7 @@ export class UsersService {
   async findAll(
     params: ISearchUserParams,
     select?: string,
-  ): Promise<Array<IDocumentUser> | null> {
+  ): Promise<Array<User> | null> {
     try {
       const filter = {
         name: { $regex: params.name },

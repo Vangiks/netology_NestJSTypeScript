@@ -1,12 +1,11 @@
 import { Controller, Post, Body, UseGuards, Req, Res } from '@nestjs/common';
 import { ICreateUser } from 'src/users/dto';
-import { IDocumentUser } from 'src/users/model';
+import { User } from 'src/users/model';
 import { ERole } from 'src/common';
 import { AuthService } from '../auth/auth.service';
 import { UsersService } from '../users/users.service';
-import { JwtAuthGuard } from './auth.guard';
+import { JwtAuthGuard, LocalAuthGuard } from './guards';
 import { IJWTPayload, IRegisterUser } from './dto';
-import { LocalAuthGuard } from './local.guard';
 import { Response } from 'express';
 import { loginSchema, registerSchema } from './validation/schema';
 import { AuthValidationPipe } from './validation';
@@ -26,7 +25,7 @@ export class AuthController {
     request,
     @Res({ passthrough: true }) response: Response,
   ): Promise<{ access_token: string }> {
-    const user: IDocumentUser = request.user;
+    const user: User = request.user;
     const jwtPayload: IJWTPayload = {
       name: user.name,
       email: user.email,

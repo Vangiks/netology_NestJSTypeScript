@@ -1,7 +1,7 @@
-import { User } from 'src/users/model';
+import { IUser } from 'src/users/user.interface';
 
-export interface IRegisterUser extends Omit<User, 'passwordHash' | 'role'> {
+export interface IRegisterUser extends Omit<IUser, 'passwordHash' | 'role'> {
   password: string;
 }
 
-export interface IJWTPayload extends Omit<User, 'passwordHash'> {}
+export interface IJWTPayload extends Omit<IUser, 'passwordHash'> {}

@@ -4,7 +4,7 @@ import { ICreateUser, ISearchUserParams } from './dto';
 import {} from './model';
 import { UserValidationPipe } from './validation';
 import { createUserSchema, searchUserParamsSchema } from './validation/schema';
-import { JwtAuthGuard } from '../auth/auth.guard';
+import { JwtAuthGuard } from 'src/auth/guards';
 import { ERole, Roles, RolesGuard } from 'src/common';
 
 @Controller()

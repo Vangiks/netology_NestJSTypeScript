@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { IDocumentUser } from 'src/users/model';
+import { User } from 'src/users/model';
 import { UsersService } from 'src/users/users.service';
 import { IJWTPayload, IRegisterUser } from './dto';
 import { ConfigService } from '@nestjs/config';
@@ -16,7 +16,7 @@ export class AuthService {
   async validateUser(
     email: string,
     password?: string,
-  ): Promise<IDocumentUser | void> {
+  ): Promise<User | void> {
     const findUser = await this.usersService.findByEmail(email);
     if (!findUser) {
       throw new UnauthorizedException(

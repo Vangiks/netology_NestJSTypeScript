@@ -20,7 +20,7 @@ import {
   Roles,
   RolesGuard,
 } from 'src/common';
-import { JwtAuthGuard } from 'src/auth/auth.guard';
+import { JwtAuthGuard } from 'src/auth/guards';
 import {
   ICreateHotelRoom,
   ISearchHotelRoomsParams,

@@ -1,10 +1,10 @@
-import { User } from '../model';
+import { IUser } from '../user.interface';
 
-export interface ICreateUser extends Omit<User, 'passwordHash'> {
+export interface ICreateUser extends Omit<IUser, 'passwordHash'> {
   password: string;
 }
 
-export interface ISearchUserParams extends Omit<User, 'passwordHash' | 'role'> {
+export interface ISearchUserParams extends Omit<IUser, 'passwordHash' | 'role'> {
   limit: number;
   offset: number;
 }

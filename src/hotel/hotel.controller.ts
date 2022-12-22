@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ParseObjectIdPipe, ERole, Roles, RolesGuard } from 'src/common';
-import { JwtAuthGuard } from 'src/auth/auth.guard';
+import { JwtAuthGuard } from 'src/auth/guards';
 import { ICreateHotel, ISearchHotelParams, IUpdateHotel } from './dto';
 import { HotelService } from './hotel.service';
 import { HotelValidationPipe } from './validation';
