@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { TID } from 'src/types';
+import { TID } from 'src/common';
 import { IMarkMessagesAsReadDto } from './dto';
 import {
   SupportRequest,

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, QueryOptions } from 'mongoose';
-import { TID } from 'src/types';
+import { TID } from 'src/common';
 import { Hotel, IDocumentHotel } from './model';
 import { ICreateHotel, ISearchHotelParams, IUpdateHotel } from './dto';
 

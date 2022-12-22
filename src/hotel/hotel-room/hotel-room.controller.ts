@@ -12,7 +12,11 @@ import {
   Query,
 } from '@nestjs/common/decorators';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { MulterFileBase64Pipe, ParseObjectIdPipe } from 'pipes';
+import {
+  MulterFileBase64Pipe,
+  ParseObjectIdPipe,
+  AllowAnonymous,
+} from 'src/common';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { RolesGuard } from 'src/users/roles.guard';
 import { ERole, Roles } from 'src/users/types';
@@ -22,7 +26,6 @@ import {
   IUpdateHotelRoom,
 } from './dto';
 import { HotelRoomService } from './hotel-room.service';
-import { AllowAnonymous } from 'decorators';
 import { HotelRoomValidationPipe } from './validation';
 import {
   createHotelRoomSchema,

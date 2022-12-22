@@ -1,9 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
-import { ResponseInterceptor } from '../interceptors/response';
-import { ResponseExceptionFilter } from '../exceptions-filters/response';
-import { GLOBAL_PREFIX } from './constants';
+import {
+  ResponseExceptionFilter,
+  ResponseInterceptor,
+  GLOBAL_PREFIX,
+} from 'src/common';
 import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {

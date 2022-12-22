@@ -8,10 +8,8 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { Pagination } from 'decorators/pagination.decorator';
-import { ParseObjectIdPipe } from 'pipes';
+import { Pagination, IPagination, ParseObjectIdPipe } from 'src/common';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
-import { IPagination } from 'src/types';
 import { RolesGuard } from 'src/users/roles.guard';
 import { ERole, Roles } from 'src/users/types';
 import {

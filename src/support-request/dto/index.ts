@@ -1,4 +1,4 @@
-import { TID } from 'src/types';
+import { TID } from 'src/common';
 import { Message, SupportRequest } from '../model';
 
 export interface ICreateSupportRequestDto {

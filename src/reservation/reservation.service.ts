@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { IReservationSearchOptions } from './dto';
 import { IDocumentReservation, Reservation } from './model';
-import { TID } from 'src/types';
+import { TID } from 'src/common';
 import { HotelRoomService } from 'src/hotel/hotel-room/hotel-room.service';
 
 @Injectable()

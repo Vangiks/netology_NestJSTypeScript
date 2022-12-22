@@ -1,6 +1,6 @@
 import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
 import { Delete, Get, Param } from '@nestjs/common/decorators';
-import { ParseObjectIdPipe } from 'pipes';
+import { ParseObjectIdPipe } from 'src/common';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { RolesGuard } from 'src/users/roles.guard';
 import { ERole, Roles } from 'src/users/types';

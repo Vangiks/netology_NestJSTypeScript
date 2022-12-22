@@ -9,8 +9,7 @@ import { ICreateBookComment } from './dto';
 import { BookCommentsValidationPipe } from './validation';
 import { bookCommentCreateSchema } from './validation/schema';
 import { UseFilters, UseInterceptors } from '@nestjs/common';
-import { WsExceptionFilter } from '../../exceptions-filters/ws-response';
-import { ResponseInterceptor } from '../../interceptors/response';
+import { WsExceptionFilter, ResponseInterceptor } from 'src/common';
 
 @WebSocketGateway({ cors: true })
 export class BookCommentsGateway {

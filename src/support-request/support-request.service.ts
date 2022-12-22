@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { IPagination, TID } from 'src/types';
+import { IPagination, TID } from 'src/common';
 import { GetChatListParams, ISendMessageDto } from './dto';
 import {
   Message,
