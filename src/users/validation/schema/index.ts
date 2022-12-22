@@ -1,5 +1,5 @@
 import * as Joi from 'joi';
-import { ERole } from 'src/users/types';
+import { ERole } from 'src/common';
 
 export const createUserSchema = Joi.object().keys({
   email: Joi.string().email().required(),

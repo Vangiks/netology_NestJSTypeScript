@@ -1,8 +1,7 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { ERole } from 'src/users/types';
+import { ERole } from 'src/common';
 import { IDocumentSupportRequest, SupportRequest } from './model';
 
 @Injectable()
@@ -16,7 +15,7 @@ export class SupportRequestClientGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const user = request.user;
     const supportRequestId = request.params.id;
-    
+
     if (user.role === ERole.Client) {
       const supportRequest = await this.SupportRequestModel.findById(
         supportRequestId,

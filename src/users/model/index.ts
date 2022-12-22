@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, HydratedDocument } from 'mongoose';
-import { ERole } from '../types';
+import { ERole } from 'src/common';
 
 export interface IDocumentUser extends Document, User {}
 

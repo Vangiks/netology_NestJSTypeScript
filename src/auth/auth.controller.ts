@@ -1,7 +1,7 @@
 import { Controller, Post, Body, UseGuards, Req, Res } from '@nestjs/common';
 import { ICreateUser } from 'src/users/dto';
 import { IDocumentUser } from 'src/users/model';
-import { ERole } from 'src/users/types';
+import { ERole } from 'src/common';
 import { AuthService } from '../auth/auth.service';
 import { UsersService } from '../users/users.service';
 import { JwtAuthGuard } from './auth.guard';

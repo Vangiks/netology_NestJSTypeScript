@@ -1,9 +1,9 @@
 import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
 import { Delete, Get, Param } from '@nestjs/common/decorators';
-import { ParseObjectIdPipe } from 'src/common';
+import { ParseObjectIdPipe, ERole } from 'src/common';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { RolesGuard } from 'src/users/roles.guard';
-import { ERole, Roles } from 'src/users/types';
+import { Roles } from 'src/users/types';
 import { ICreateReservation, IReservationSearchOptions } from './dto';
 import { ReservationService } from './reservation.service';
 import { ReservationValidationPipe } from './validation';
