@@ -1,5 +1,5 @@
 import { TID } from 'src/common';
-import { Reservation } from '../model';
+import { IReservation } from '../reservation.interface';
 
 export interface ICreateReservation {
   hotelRoom: string;
@@ -8,8 +8,7 @@ export interface ICreateReservation {
 }
 
 export interface IReservationSearchOptions
-  extends Partial<Omit<Reservation, 'hotelId' | 'roomId'>> {
-  _id?: TID;
+  extends Partial<Omit<IReservation, 'hotelId' | 'roomId'>> {
   userId?: string;
   dateStart?: Date;
   dateEnd?: Date;
