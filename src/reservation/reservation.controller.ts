@@ -1,11 +1,18 @@
 import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
 import { Delete, Get, Param } from '@nestjs/common/decorators';
-import { ParseObjectIdPipe, ERole, Roles, RolesGuard } from 'src/common';
+import {
+  ParseObjectIdPipe,
+  ERole,
+  Roles,
+  RolesGuard,
+  GetUser,
+} from 'src/common';
 import { JwtAuthGuard } from 'src/auth/guards';
 import { ICreateReservation, IReservationSearchOptions } from './dto';
 import { ReservationService } from './reservation.service';
 import { ReservationValidationPipe } from './validation';
 import { createReservationSchema } from './validation/schema';
+import { User } from 'src/users/model';
 @Controller()
 export class ReservationController {
   constructor(private readonly reservationService: ReservationService) {}
@@ -13,9 +20,12 @@ export class ReservationController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(ERole.Client)
   @Get('client/reservations')
-  async getReservationsCurrentUser(@Req() request) {
+  async getReservationsCurrentUser(
+    @GetUser()
+    user: User,
+  ) {
     const filter: IReservationSearchOptions = {
-      userId: request.user.id,
+      userId: user.id,
     };
     const findReservation = await this.reservationService.getReservations(
       filter,
@@ -66,9 +76,9 @@ export class ReservationController {
   async addReservationCurrentUser(
     @Body(new ReservationValidationPipe(createReservationSchema))
     reservation: ICreateReservation,
-    @Req() request,
+    @GetUser()
+    user: User,
   ) {
-    const user = request.user;
     const data = {
       userId: user.id,
       roomId: reservation.hotelRoom,
@@ -94,9 +104,9 @@ export class ReservationController {
   @Delete('client/reservations/:id')
   async removeReservationCurrentUser(
     @Param('id', new ParseObjectIdPipe()) id: string,
-    @Req() request,
+    @GetUser()
+    user: User,
   ) {
-    const user = request.user;
     await this.reservationService.removeReservation(id, user._id);
     return null;
   }

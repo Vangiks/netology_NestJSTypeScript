@@ -15,6 +15,7 @@ import {
   ERole,
   Roles,
   RolesGuard,
+  GetUser,
 } from 'src/common';
 import { JwtAuthGuard } from 'src/auth/guards';
 import {
@@ -49,13 +50,12 @@ export class SupportRequestController {
     @Query(new SupportRequestValidationPipe(findSupportRequestsSchema))
     params: { isActive: boolean },
     @Pagination() pagination: IPagination,
-    @Req()
-    request,
+    @GetUser()
+    user: User,
   ) {
-    const user = request.user;
     const filter: GetChatListParams = {
       isActive: params.isActive,
-      user,
+      user: user._id,
     };
     const findSupportRequest =
       await this.supportRequestService.findSupportRequests(
@@ -137,10 +137,9 @@ export class SupportRequestController {
     @Param('id', new ParseObjectIdPipe()) id: string,
     @Body()
     body,
-    @Req()
-    request,
+    @GetUser()
+    user: User,
   ) {
-    const user = request.user;
     const data: ISendMessageDto = {
       author: user._id,
       supportRequest: id,
@@ -159,10 +158,9 @@ export class SupportRequestController {
     @Param('id', new ParseObjectIdPipe()) id: string,
     @Body(new SupportRequestValidationPipe(markMessagesAsReadSchema))
     body: { createdBefore: Date },
-    @Req()
-    request,
+    @GetUser()
+    user: User,
   ) {
-    const user: User = request.user;
     const data: IMarkMessagesAsReadDto = {
       createdBefore: body.createdBefore,
       supportRequest: id,
@@ -187,10 +185,9 @@ export class SupportRequestController {
   @Post('client/support-requests')
   async createSupportRequest(
     @Body() data: ICreateSupportRequestDto,
-    @Req()
-    request,
+    @GetUser()
+    user: User,
   ) {
-    const user = request.user;
     const newCupportRequest = {
       user,
       text: data.text,

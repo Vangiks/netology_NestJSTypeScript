@@ -1,7 +1,7 @@
 import { Controller, Post, Body, UseGuards, Req, Res } from '@nestjs/common';
 import { ICreateUser } from 'src/users/dto';
 import { User } from 'src/users/model';
-import { ERole } from 'src/common';
+import { ERole, GetUser } from 'src/common';
 import { AuthService } from '../auth/auth.service';
 import { UsersService } from '../users/users.service';
 import { JwtAuthGuard, LocalAuthGuard } from './guards';
@@ -21,11 +21,10 @@ export class AuthController {
   @Post('auth/login')
   async login(
     @Body(new AuthValidationPipe(loginSchema)) _body,
-    @Req()
-    request,
+    @GetUser()
+    user: User,
     @Res({ passthrough: true }) response: Response,
   ): Promise<{ access_token: string }> {
-    const user: User = request.user;
     const jwtPayload: IJWTPayload = {
       name: user.name,
       email: user.email,

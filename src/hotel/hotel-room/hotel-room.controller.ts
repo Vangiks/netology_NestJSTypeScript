@@ -19,6 +19,7 @@ import {
   ERole,
   Roles,
   RolesGuard,
+  GetUser,
 } from 'src/common';
 import { JwtAuthGuard } from 'src/auth/guards';
 import {
@@ -33,6 +34,7 @@ import {
   searchHotelRoomParamsSchema,
   updateHotelRoomSchema,
 } from './validation/schema';
+import { User } from 'src/users/model';
 
 @Controller()
 export class HotelRoomController {
@@ -44,14 +46,14 @@ export class HotelRoomController {
   async searchHotelRoom(
     @Query(new HotelRoomValidationPipe(searchHotelRoomParamsSchema))
     params: ISearchHotelRoomsParams,
-    @Req()
-    request,
+    @GetUser()
+    user: User,
   ) {
     const filter: ISearchHotelRoomsParams = {
       ...params,
     };
 
-    if (!request?.user || request?.user.role === ERole.Client) {
+    if (!user || user.role === ERole.Client) {
       filter.isEnabled = true;
     }
     return await this.hotelRoomService.search(filter, 'id description images');
