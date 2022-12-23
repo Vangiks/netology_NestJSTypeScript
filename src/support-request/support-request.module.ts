@@ -10,6 +10,7 @@ import {
   SupportRequest,
   Message,
 } from './model';
+import { SupportRequestGateway } from './support-request.gateway';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import {
     SupportRequestClientService,
     SupportRequestService,
     SupportRequestEmployeeService,
+    SupportRequestGateway,
   ],
   controllers: [SupportRequestController],
 })

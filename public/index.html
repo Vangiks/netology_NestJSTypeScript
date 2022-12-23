@@ -12,18 +12,9 @@
 <body>
     <script src="/node_modules/socket.io/client-dist/socket.io.js"></script>
     <script type="application/javascript">
-        const socket = io.connect('http://localhost:3000');
+        const socket = io.connect('127.0.0.1:3000');
 
-        socket.emit('getAllComments', (answer) => {
-            console.log(answer);
-        });
-
-        socket.emit('getAllCommentsBook', '63695147faf383018ecd8bbf', (answer) => {
-            console.log(answer);
-        });
-
-
-        socket.emit('addComment', { bookId: '', comment: 'Новый комментарий' }, (answer) => {
+        socket.emit('subscribeToChat', '63695147faf383018ecd8bbf', (answer) => {
             console.log(answer);
         });
 
