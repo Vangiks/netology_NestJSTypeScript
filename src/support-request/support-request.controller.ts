@@ -32,6 +32,7 @@ import {
   findSupportRequestsSchema,
   markMessagesAsReadSchema,
 } from './validation/schema';
+import { User } from 'src/users/model';
 @Controller()
 export class SupportRequestController {
   constructor(
@@ -66,10 +67,10 @@ export class SupportRequestController {
       findSupportRequest.map(async (supportRequest) => {
         const unreadMessages =
           await this.supportRequestClientService.getUnreadCount(
-            supportRequest._id,
+            supportRequest.id,
           );
         return {
-          id: supportRequest._id,
+          id: supportRequest.id,
           createdAt: supportRequest.createdAt,
           isActive: supportRequest.isActive,
           hasNewMessages: !!unreadMessages?.length,
@@ -100,10 +101,10 @@ export class SupportRequestController {
       findSupportRequest.map(async (supportRequest) => {
         const unreadMessages =
           await this.supportRequestEmployeeService.getUnreadCount(
-            supportRequest._id,
+            supportRequest.id,
           );
         return {
-          id: supportRequest._id,
+          id: supportRequest.id,
           createdAt: supportRequest.createdAt,
           isActive: supportRequest.isActive,
           hasNewMessages: !!unreadMessages.length,
@@ -161,17 +162,17 @@ export class SupportRequestController {
     @Req()
     request,
   ) {
-    const user = request.user;
+    const user: User = request.user;
     const data: IMarkMessagesAsReadDto = {
       createdBefore: body.createdBefore,
       supportRequest: id,
-      user: user,
+      user: user._id,
     };
 
     let result = false;
-    if (data.user.role === ERole.Client) {
+    if (user.role === ERole.Client) {
       result = await this.supportRequestClientService.markMessagesAsRead(data);
-    } else if (data.user.role === ERole.Manager) {
+    } else if (user.role === ERole.Manager) {
       result = await this.supportRequestEmployeeService.markMessagesAsRead(
         data,
       );

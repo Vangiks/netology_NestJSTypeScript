@@ -1,19 +1,20 @@
 import { TID } from 'src/common';
-import { Message, SupportRequest } from '../model';
+import { IMessage } from '../message.interface';
+import { ISupportRequest } from '../support-request.interface';
 
 export interface ICreateSupportRequestDto {
   text: string;
 }
 
-export interface ISendMessageDto extends Pick<Message, 'author' | 'text'> {
+export interface ISendMessageDto extends Pick<IMessage, 'author' | 'text'> {
   supportRequest: TID;
 }
 
-export interface IMarkMessagesAsReadDto extends Pick<SupportRequest, 'user'> {
+export interface IMarkMessagesAsReadDto extends Pick<ISupportRequest, 'user'> {
   supportRequest: TID;
   createdBefore: Date;
 }
 
-export interface GetChatListParams extends Pick<SupportRequest, 'isActive'> {
+export interface GetChatListParams extends Pick<ISupportRequest, 'isActive'> {
   user?: TID;
 }

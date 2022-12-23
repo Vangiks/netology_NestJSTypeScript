@@ -1,17 +1,14 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, HydratedDocument, Schema as Schemas } from 'mongoose';
+import { Document, Schema as Schemas } from 'mongoose';
+import { TID } from 'src/common';
 import { User } from 'src/users/model';
-
-export interface IDocumentSupportRequest extends Document, SupportRequest {}
-export type SupportRequestDocument = HydratedDocument<SupportRequest>;
-
-export interface IDocumentMessage extends Document, Message {}
-export type MessageDocument = HydratedDocument<Message>;
+import { IMessage } from '../message.interface';
+import { ISupportRequest } from '../support-request.interface';
 
 @Schema()
-export class Message {
+export class Message extends Document implements IMessage {
   @Prop({ required: true, type: Schemas.Types.ObjectId, ref: User.name })
-  public author: User;
+  public author: TID;
 
   @Prop({ required: true })
   public sentAt: Date;
@@ -24,15 +21,15 @@ export class Message {
 }
 
 @Schema()
-export class SupportRequest {
+export class SupportRequest extends Document implements ISupportRequest {
   @Prop({ required: true, type: Schemas.Types.ObjectId, ref: User.name })
-  public user: User;
+  public user: TID;
 
   @Prop({ required: true })
   public createdAt: Date;
 
   @Prop({ type: Schemas.Types.Array, ref: Message.name, default: [] })
-  public messages?: Array<IDocumentMessage>;
+  public messages?: Array<TID>;
 
   @Prop()
   public isActive?: boolean;
