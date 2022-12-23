@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards, Req, Res } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Res } from '@nestjs/common';
 import { ICreateUser } from 'src/users/dto';
 import { User } from 'src/users/model';
 import { ERole, GetUser } from 'src/common';

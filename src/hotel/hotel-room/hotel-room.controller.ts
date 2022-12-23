@@ -8,7 +8,6 @@ import {
   UseInterceptors,
   Param,
   Get,
-  Req,
   Query,
 } from '@nestjs/common/decorators';
 import { FilesInterceptor } from '@nestjs/platform-express';
