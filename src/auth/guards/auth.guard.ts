@@ -28,6 +28,15 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     return super.canActivate(context);
   }
 
+  public getRequest(context: ExecutionContext) {
+    const contextType = context.getType();
+    let request = context.switchToHttp().getRequest();
+    if (contextType === 'ws') {
+      request = context.switchToWs().getClient().handshake;
+    }
+    return request;
+  }
+
   public handleRequest(err, user, info) {
     if (err) {
       throw err;

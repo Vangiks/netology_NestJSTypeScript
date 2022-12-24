@@ -12,9 +12,15 @@
 <body>
     <script src="/node_modules/socket.io/client-dist/socket.io.js"></script>
     <script type="application/javascript">
-        const socket = io.connect('127.0.0.1:3000');
+        const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoi0JIiLCJlbWFpbCI6ImZyZW56QHlhLnJ1Iiwicm9sZSI6ImNsaWVudCIsImlhdCI6MTY3MTkwNjY2MCwiZXhwIjoxNjcxOTkzMDYwfQ.xmOerRVXw8coNwWAEe1ICWQOufBt3LOxYM6nlgVCX5w'
 
-        socket.emit('subscribeToChat', '63695147faf383018ecd8bbf', (answer) => {
+        const socket = io.connect('localhost:3000', {
+            extraHeaders: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        socket.emit('subscribeToChat', '63a4009dd19f600631cabe07', (answer) => {
             console.log(answer);
         });
 

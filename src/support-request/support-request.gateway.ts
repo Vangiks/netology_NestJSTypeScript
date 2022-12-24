@@ -28,17 +28,13 @@ export class SupportRequestGateway {
     private readonly supportRequestClientService: SupportRequestClientService,
   ) {}
 
-//   @UseGuards(JwtAuthGuard, RolesGuard, SupportRequestClientGuard)
-//   @Roles(ERole.Manager, ERole.Client)
+  @UseGuards(JwtAuthGuard, RolesGuard, SupportRequestClientGuard)
+  @Roles(ERole.Manager, ERole.Client)
   @UseInterceptors(new ResponseInterceptor())
   @UseFilters(new WsExceptionFilter())
   @SubscribeMessage('subscribeToChat')
-  handleGetMessage(
-    @MessageBody() chatId: string,
-    @GetUser()
-    user: User,
-  ) {
-    return true;
+  handleGetMessage(@MessageBody() chatId: string) {
+    return 'true';
   }
 
   //   @UseInterceptors(new ResponseInterceptor())
