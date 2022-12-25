@@ -8,9 +8,7 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    @InjectModel(User.name) private UserModel: Model<User>,
-  ) {}
+  constructor(@InjectModel(User.name) private UserModel: Model<User>) {}
 
   async create(data: ICreateUser): Promise<User> {
     await this.checkUserByEmail(data.email);
@@ -26,52 +24,31 @@ export class UsersService {
   }
 
   async findById(id: TID): Promise<User | null> {
-    try {
-      return this.UserModel.findById(id).select('-__v');
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.log(error.message);
-      }
-      return null;
-    }
+    return this.UserModel.findById(id).select('-__v');
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    try {
-      return this.UserModel.findOne({ email }).select('-__v');
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.log(error.message);
-      }
-      return null;
-    }
+    return this.UserModel.findOne({ email }).select('-__v');
   }
 
   async findAll(
     params: ISearchUserParams,
     select?: string,
   ): Promise<Array<User> | null> {
-    try {
-      const filter = {
-        name: { $regex: params.name },
-        email: { $regex: params.email },
-        contactPhone: null,
-      };
+    const filter = {
+      name: { $regex: params.name },
+      email: { $regex: params.email },
+      contactPhone: null,
+    };
 
-      if (params.contactPhone) {
-        filter.contactPhone = { $regex: params.contactPhone };
-      } else delete filter.contactPhone;
+    if (params.contactPhone) {
+      filter.contactPhone = { $regex: params.contactPhone };
+    } else delete filter.contactPhone;
 
-      return this.UserModel.find(filter)
-        .select('-__v' + select ? ' ' + select : '')
-        .skip(params.offset)
-        .limit(params.limit);
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.log(error.message);
-      }
-      return null;
-    }
+    return this.UserModel.find(filter)
+      .select('-__v' + select ? ' ' + select : '')
+      .skip(params.offset)
+      .limit(params.limit);
   }
 
   async checkUserByEmail(email: string): Promise<void> {
