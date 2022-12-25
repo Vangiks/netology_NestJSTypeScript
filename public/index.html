@@ -14,13 +14,15 @@
     <script type="application/javascript">
         const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoi0JIiLCJlbWFpbCI6ImZyZW56QHlhLnJ1Iiwicm9sZSI6ImNsaWVudCIsImlhdCI6MTY3MTkwNjY2MCwiZXhwIjoxNjcxOTkzMDYwfQ.xmOerRVXw8coNwWAEe1ICWQOufBt3LOxYM6nlgVCX5w'
 
+        const chatId = '63a4009dd19f600631cabe07';
+
         const socket = io.connect('localhost:3000', {
             extraHeaders: {
                 Authorization: `Bearer ${token}`,
             },
         });
 
-        socket.emit('subscribeToChat', '63a4009dd19f600631cabe07', (answer) => {
+        socket.emit('subscribeToChat', chatId, (answer) => {
             console.log(answer);
         });
 
