@@ -38,7 +38,7 @@ export class SupportRequestService {
   }
 
   async getMessages(supportRequest: TID) {
-    return await this.SupportRequestModel.findById(supportRequest)
+    return this.SupportRequestModel.findById(supportRequest)
       .populate<{
         messages: Array<Message & { author: User }>;
       }>({
