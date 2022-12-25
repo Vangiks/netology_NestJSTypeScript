@@ -26,7 +26,7 @@ export class SupportRequestClientGuard implements CanActivate {
       const executionContextHost = context.switchToWs();
       const client = executionContextHost.getClient();
       user = client.handshake.user;
-      supportRequestId = executionContextHost.getData();
+      supportRequestId = String(executionContextHost.getData());
     }
 
     if (user.role === ERole.Client) {

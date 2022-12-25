@@ -29,8 +29,10 @@ import { SupportRequestEmployeeService } from './support-request-employee.servic
 import { SupportRequestService } from './support-request.service';
 import { SupportRequestValidationPipe } from './validation';
 import {
+  createSupportRequestSchema,
   findSupportRequestsSchema,
   markMessagesAsReadSchema,
+  sendMessageSupportRequestSchema,
 } from './validation/schema';
 import { User } from 'src/users/model';
 @Controller()
@@ -41,7 +43,6 @@ export class SupportRequestController {
     private readonly supportRequestClientService: SupportRequestClientService,
   ) {}
 
-  // TODO Validation
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(ERole.Client)
   @Get('client/support-requests')
@@ -83,7 +84,7 @@ export class SupportRequestController {
   @Get('manager/support-requests')
   async getSupportRequest(
     @Query(new SupportRequestValidationPipe(findSupportRequestsSchema))
-    params,
+    params: { isActive: boolean },
     @Pagination() pagination: IPagination,
   ) {
     const filter: GetChatListParams = {
@@ -127,14 +128,13 @@ export class SupportRequestController {
     return await this.supportRequestService.getMessages(id);
   }
 
-  // TODO Validation
   @UseGuards(JwtAuthGuard, RolesGuard, SupportRequestClientGuard)
   @Roles(ERole.Manager, ERole.Client)
   @Post('common/support-requests/:id/messages')
   async sendMessageSupportRequest(
     @Param('id', new ParseObjectIdPipe()) id: string,
-    @Body()
-    body,
+    @Body(new SupportRequestValidationPipe(sendMessageSupportRequestSchema))
+    body: { text: string },
     @GetUser()
     user: User,
   ) {
@@ -148,7 +148,6 @@ export class SupportRequestController {
     return messages;
   }
 
-  // TODO Validation
   @UseGuards(JwtAuthGuard, RolesGuard, SupportRequestClientGuard)
   @Roles(ERole.Manager, ERole.Client)
   @Post('common/support-requests/:id/messages/read')
@@ -177,12 +176,12 @@ export class SupportRequestController {
     return { succes: result };
   }
 
-  // TODO Validation
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(ERole.Client)
   @Post('client/support-requests')
   async createSupportRequest(
-    @Body() data: ICreateSupportRequestDto,
+    @Body(new SupportRequestValidationPipe(createSupportRequestSchema))
+    data: ICreateSupportRequestDto,
     @GetUser()
     user: User,
   ) {

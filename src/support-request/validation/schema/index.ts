@@ -6,6 +6,15 @@ export const findSupportRequestsSchema = Joi.object().keys({
   offset: Joi.number().optional(),
 });
 
+export const sendMessageSupportRequestSchema = Joi.object().keys({
+  text: Joi.string().required(),
+});
+
+export const createSupportRequestSchema = Joi.object().keys({
+  text: Joi.string().required(),
+});
+
+
 export const markMessagesAsReadSchema = Joi.object().keys({
   createdBefore: Joi.date().required(),
 });
