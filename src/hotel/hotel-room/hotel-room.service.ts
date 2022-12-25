@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, QueryOptions } from 'mongoose';
-import { TID } from 'src/common';
+import { IPagination, TID } from 'src/common';
 import { HotelRoom } from './model';
 import {
   ICreateHotelRoom,
@@ -9,15 +9,23 @@ import {
   ISearchHotelRoomsParams,
 } from './dto';
 import { IHotelRoom } from './hotel-room.interface';
+import { Hotel } from '../model';
+import { HotelService } from '../hotel.service';
 
 @Injectable()
 export class HotelRoomService {
   constructor(
     @InjectModel(HotelRoom.name)
     private HotelRoomModel: Model<HotelRoom>,
+    private hotelService: HotelService,
   ) {}
 
   async create(data: ICreateHotelRoom): Promise<HotelRoom> {
+    const hotel = await this.hotelService.findById(data.hotelId);
+    if (!hotel) {
+      throw new BadRequestException('Отеля с таким номером не существует');
+    }
+
     const hotelRoom: IHotelRoom = {
       hotel: data.hotelId,
       description: data.description,
@@ -35,18 +43,29 @@ export class HotelRoomService {
   }
 
   async search(
-    params: ISearchHotelRoomsParams,
-    select?: string,
-  ): Promise<Array<HotelRoom>> {
-    if (params.isEnabled) {
-      params.isEnabled = params.isEnabled;
+    filters: ISearchHotelRoomsParams,
+    select: string = '-__v',
+    pagination: IPagination,
+  ) {
+    if (filters.isEnabled) {
+      filters.isEnabled = filters.isEnabled;
     }
-    const selectedHotelRoom = this.HotelRoomModel.find(params).select('-__v');
-
-    return selectedHotelRoom
-      .select('-__v' + select ? ' ' + select : '')
-      .skip(params.offset)
-      .limit(params.limit);
+    return this.HotelRoomModel.find(filters)
+      .select(select)
+      .populate<{ hotel: Hotel }>('hotel')
+      .skip(pagination.offset)
+      .limit(pagination.limit)
+      .then((hotelRooms) => {
+        return hotelRooms.map((hotelRoom) => ({
+          id: hotelRoom._id,
+          description: hotelRoom.description,
+          images: hotelRoom.images,
+          hotel: {
+            id: hotelRoom.hotel._id,
+            title: hotelRoom.hotel.title,
+          },
+        }));
+      });
   }
 
   async update(

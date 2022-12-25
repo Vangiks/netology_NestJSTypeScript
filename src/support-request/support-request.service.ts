@@ -26,7 +26,6 @@ export class SupportRequestService {
     return query
       .populate<{ user: User }>('user')
       .limit(pagination.limit)
-      .orFail()
       .then((findSupportRequests) =>
         findSupportRequests.map((findSupportRequest) => ({
           id: findSupportRequest._id,
@@ -45,7 +44,6 @@ export class SupportRequestService {
         path: 'messages',
         populate: 'author',
       })
-      .orFail()
       .then((supportRequest) =>
         supportRequest.messages.map((message) => ({
           id: supportRequest._id,

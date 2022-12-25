@@ -19,6 +19,8 @@ import {
   Roles,
   RolesGuard,
   GetUser,
+  Pagination,
+  IPagination,
 } from 'src/common';
 import { JwtAuthGuard } from 'src/auth/guards';
 import {
@@ -45,6 +47,7 @@ export class HotelRoomController {
   async searchHotelRoom(
     @Query(new HotelRoomValidationPipe(searchHotelRoomParamsSchema))
     params: ISearchHotelRoomsParams,
+    @Pagination() pagination: IPagination,
     @GetUser()
     user: User,
   ) {
@@ -55,7 +58,11 @@ export class HotelRoomController {
     if (!user || user.role === ERole.Client) {
       filter.isEnabled = true;
     }
-    return await this.hotelRoomService.search(filter, 'id description images');
+    return await this.hotelRoomService.search(
+      filter,
+      'id description images',
+      pagination,
+    );
   }
 
   @Get('common/hotel-rooms/:id')

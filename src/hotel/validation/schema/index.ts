@@ -6,13 +6,12 @@ export const createHotelSchema = Joi.object().keys({
 });
 
 export const updateHotelSchema = Joi.object().keys({
-    title: Joi.string().optional(),
-    description: Joi.string().optional(),
-  });
-  
+  title: Joi.string().optional(),
+  description: Joi.string().optional(),
+});
 
 export const searchHotelParamsSchema = Joi.object().keys({
-  title: Joi.string().required(),
-  limit: Joi.number().required(),
-  offset: Joi.number().required(),
+  title: Joi.string().optional(),
+  limit: Joi.number().optional(),
+  offset: Joi.number().optional(),
 });

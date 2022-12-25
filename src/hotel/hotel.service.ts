@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, QueryOptions } from 'mongoose';
-import { TID } from 'src/common';
+import { IPagination, TID } from 'src/common';
 import { Hotel } from './model';
 import { IHotel } from './hotel.interface';
 import { ICreateHotel, ISearchHotelParams, IUpdateHotel } from './dto';
@@ -26,16 +26,17 @@ export class HotelService {
   }
 
   async search(
-    params: ISearchHotelParams,
-    select?: string,
+    filters: ISearchHotelParams,
+    select: string = '-__v',
+    pagination: IPagination,
   ): Promise<Array<Hotel>> {
     const filter = {
-      title: { $regex: params.title },
+      title: { $regex: !filters.title ? '' : filters.title },
     };
     return this.HotelModel.find(filter)
       .select('-__v' + select ? ' ' + select : '')
-      .skip(params.offset)
-      .limit(params.limit);
+      .skip(pagination.offset)
+      .limit(pagination.limit);
   }
 
   async update(

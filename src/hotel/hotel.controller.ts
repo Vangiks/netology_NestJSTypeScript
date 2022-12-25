@@ -8,7 +8,14 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ParseObjectIdPipe, ERole, Roles, RolesGuard } from 'src/common';
+import {
+  ParseObjectIdPipe,
+  ERole,
+  Roles,
+  RolesGuard,
+  Pagination,
+  IPagination,
+} from 'src/common';
 import { JwtAuthGuard } from 'src/auth/guards';
 import { ICreateHotel, ISearchHotelParams, IUpdateHotel } from './dto';
 import { HotelService } from './hotel.service';
@@ -29,8 +36,14 @@ export class HotelController {
   async getHotels(
     @Query(new HotelValidationPipe(searchHotelParamsSchema))
     params: ISearchHotelParams,
+    @Pagination()
+    pagination: IPagination,
   ) {
-    return await this.hotelService.search(params, 'id title description');
+    return await this.hotelService.search(
+      params,
+      'id title description',
+      pagination,
+    );
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

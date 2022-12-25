@@ -11,7 +11,5 @@ export interface IUpdateHotelRoom
 }
 
 export interface ISearchHotelRoomsParams extends Pick<IHotelRoom, 'hotel'> {
-  limit: number;
-  offset: number;
   isEnabled?: boolean;
 }

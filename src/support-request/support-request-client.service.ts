@@ -40,7 +40,6 @@ export class SupportRequestClientService {
         path: 'messages',
         match: { readAt: { $exists: false } },
       })
-      .orFail()
       .then((supportRequests) =>
         supportRequests.messages.filter(
           (message) =>
@@ -59,7 +58,6 @@ export class SupportRequestClientService {
           sentAt: { $gt: params.createdBefore },
         },
       })
-      .orFail()
       .then((supportRequests) => {
         supportRequests.messages.forEach(async (message) => {
           await this.MessageModel.updateOne(

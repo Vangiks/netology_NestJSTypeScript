@@ -56,7 +56,6 @@ export class ReservationService {
         { path: 'roomId', select: '-_id description images' },
         { path: 'hotelId', select: '-_id title description' },
       ])
-      .orFail()
       .then((reservations) =>
         reservations.map((reservation) => ({
           startDate: reservation.dateStart,
