@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { TID } from 'src/common';
-import { IMarkMessagesAsReadDto } from './dto';
 import { SupportRequest, Message } from './model';
 
 @Injectable()
@@ -46,28 +45,5 @@ export class SupportRequestClientService {
             message.author.toString() !== supportRequests.user.toString(),
         ),
       );
-  }
-
-  async markMessagesAsRead(params: IMarkMessagesAsReadDto): Promise<boolean> {
-    return this.SupportRequestModel.findById(params.supportRequest)
-      .populate<{ messages: Array<Message> }>({
-        path: 'messages',
-        match: {
-          readAt: { $exists: false },
-          author: { $ne: params.user },
-          sentAt: { $gt: params.createdBefore },
-        },
-      })
-      .then((supportRequests) => {
-        supportRequests.messages.forEach(async (message) => {
-          await this.MessageModel.updateOne(
-            { _id: message._id },
-            {
-              $currentDate: { readAt: 'date' },
-            },
-          );
-        });
-        return true;
-      });
   }
 }

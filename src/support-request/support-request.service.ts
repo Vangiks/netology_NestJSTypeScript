@@ -3,7 +3,11 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { IPagination, TID } from 'src/common';
 import { User } from 'src/users/model';
-import { GetChatListParams, ISendMessageDto } from './dto';
+import {
+  GetChatListParams,
+  IMarkMessagesAsReadDto,
+  ISendMessageDto,
+} from './dto';
 import { Message, SupportRequest } from './model';
 import { IFindSupportRequests } from './support-request.interface';
 
@@ -49,7 +53,7 @@ export class SupportRequestService {
           id: supportRequest._id,
           createdAt: supportRequest.createdAt,
           text: message.text,
-          readAt: message.readAt,
+          readAt: message.readAt || null,
           author: {
             id: message.author._id,
             name: message.author.name,
@@ -71,5 +75,28 @@ export class SupportRequestService {
     });
 
     return newMessage;
+  }
+
+  async markMessagesAsRead(params: IMarkMessagesAsReadDto): Promise<boolean> {
+    return this.SupportRequestModel.findById(params.supportRequest)
+      .populate<{ messages: Array<Message> }>({
+        path: 'messages',
+        match: {
+          readAt: { $exists: false },
+          author: { $ne: params.user },
+          sentAt: { $gt: params.createdBefore },
+        },
+      })
+      .then((supportRequests) => {
+        supportRequests.messages.forEach(async (message) => {
+          await this.MessageModel.updateOne(
+            { _id: message._id },
+            {
+              $currentDate: { readAt: 'date' },
+            },
+          );
+        });
+        return true;
+      });
   }
 }

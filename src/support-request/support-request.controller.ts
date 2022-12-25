@@ -144,8 +144,7 @@ export class SupportRequestController {
       text: body.text,
     };
     await this.supportRequestService.sendMessage(data);
-    const messages = await this.supportRequestService.getMessages(id);
-    return messages;
+    return await this.supportRequestService.getMessages(id);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard, SupportRequestClientGuard)
@@ -164,14 +163,7 @@ export class SupportRequestController {
       user: user._id,
     };
 
-    let result = false;
-    if (user.role === ERole.Client) {
-      result = await this.supportRequestClientService.markMessagesAsRead(data);
-    } else if (user.role === ERole.Manager) {
-      result = await this.supportRequestEmployeeService.markMessagesAsRead(
-        data,
-      );
-    }
+    const result = await this.supportRequestService.markMessagesAsRead(data);
 
     return { succes: result };
   }
