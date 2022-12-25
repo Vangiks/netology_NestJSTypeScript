@@ -124,8 +124,7 @@ export class SupportRequestController {
   async getAllMessagesSupportRequest(
     @Param('id', new ParseObjectIdPipe()) id: string,
   ) {
-    const messages = await this.supportRequestService.getMessages(id);
-    return messages;
+    return await this.supportRequestService.getMessages(id);
   }
 
   // TODO Validation
