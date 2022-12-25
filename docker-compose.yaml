@@ -21,17 +21,17 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
       ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
 
-  # library:
-  #   build: .
-  #   ports:
-  #     - '3000:3000'
-  #   environment:
-  #     - PORT=3000
-  #     - APP_COUNTER_BOOKS_HOST=http://counter-books:3002
-  #     - DATABASE_PATH=mongodb://root:example@mongo:27017/
-  #   depends_on:
-  #     - counter-books
-  #     - mongo
+  backend:
+    build: .
+    ports:
+      - '3000:3000'
+    environment:
+      - PORT=3000
+      - DATABASE_PATH=mongodb://root:example@mongo:27017/
+      - JWT_SECRET_TOKEN=123
+      - JWT_EXPIRATION_TIME=1d
+    depends_on:
+      - mongo
 
 volumes:
   mongo_data: {}
