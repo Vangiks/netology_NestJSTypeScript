@@ -7,3 +7,5 @@ export interface IReservation {
   dateStart: Date;
   dateEnd: Date;
 }
+
+export interface ICreateReservation extends Omit<IReservation, 'hotelId'> {}

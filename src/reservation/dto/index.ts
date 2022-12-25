@@ -1,10 +1,18 @@
-import { TID } from 'src/common';
 import { IReservation } from '../reservation.interface';
+import { IHotel } from 'src/hotel/hotel.interface';
+import { IHotelRoom } from 'src/hotel/hotel-room/hotel-room.interface';
+import { TID } from 'src/common';
 
-export interface ICreateReservation {
-  hotelRoom: string;
-  startDate: string;
-  endDate: string;
+export interface IReservationDto {
+  startDate: Date;
+  endDate: Date;
+  hotelRoom: Pick<IHotelRoom, 'description' | 'images'>;
+  hotel: Pick<IHotel, 'title' | 'description'>;
+}
+
+export interface ICreateReservationDto
+  extends Pick<IReservationDto, 'startDate' | 'endDate'> {
+  hotelRoom: TID;
 }
 
 export interface IReservationSearchOptions
