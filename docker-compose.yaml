@@ -26,10 +26,10 @@ services:
     ports:
       - '3000:3000'
     environment:
-      - PORT=3000
-      - DATABASE_PATH=mongodb://root:example@mongo:27017/
-      - JWT_SECRET_TOKEN=123
-      - JWT_EXPIRATION_TIME=1d
+      - PORT=
+      - DATABASE_PATH=
+      - JWT_SECRET_TOKEN=
+      - JWT_EXPIRATION_TIME=
     depends_on:
       - mongo
 
