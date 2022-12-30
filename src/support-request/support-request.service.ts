@@ -9,10 +9,14 @@ import {
   ISendMessageDto,
 } from './dto';
 import { Message, SupportRequest } from './model';
-import { IFindSupportRequests } from './support-request.interface';
+import {
+  IFindSupportRequests,
+  IGetMessages,
+  ISupportRequestService,
+} from './support-request.interface';
 
 @Injectable()
-export class SupportRequestService {
+export class SupportRequestService implements ISupportRequestService {
   constructor(
     @InjectModel(Message.name)
     private MessageModel: Model<Message>,
@@ -40,7 +44,7 @@ export class SupportRequestService {
       );
   }
 
-  async getMessages(supportRequest: TID) {
+  async getMessages(supportRequest: TID): Promise<Array<IGetMessages>> {
     return this.SupportRequestModel.findById(supportRequest)
       .populate<{
         messages: Array<Message & { author: User }>;

@@ -3,9 +3,12 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { TID } from 'src/common';
 import { SupportRequest, Message } from './model';
+import { ISupportRequestEmployeeService } from './support-request.interface';
 
 @Injectable()
-export class SupportRequestEmployeeService {
+export class SupportRequestEmployeeService
+  implements ISupportRequestEmployeeService
+{
   constructor(
     @InjectModel(SupportRequest.name)
     private SupportRequestModel: Model<SupportRequest>,

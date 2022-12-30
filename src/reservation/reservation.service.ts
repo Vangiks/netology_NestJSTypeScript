@@ -7,10 +7,13 @@ import { TID } from 'src/common';
 import { HotelRoomService } from 'src/hotel/hotel-room/hotel-room.service';
 import { HotelRoom } from 'src/hotel/hotel-room/model';
 import { Hotel } from 'src/hotel/model';
-import { ICreateReservation } from './reservation.interface';
+import {
+  ICreateReservation,
+  IReservationService,
+} from './reservation.interface';
 
 @Injectable()
-export class ReservationService {
+export class ReservationService implements IReservationService {
   constructor(
     @InjectModel(Reservation.name)
     private ReservationModel: Model<Reservation>,

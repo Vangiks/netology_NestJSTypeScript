@@ -3,11 +3,11 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, QueryOptions } from 'mongoose';
 import { IPagination, TID } from 'src/common';
 import { Hotel } from './model';
-import { IHotel } from './hotel.interface';
+import { IHotel, IHotelService } from './hotel.interface';
 import { ICreateHotel, ISearchHotelParams, IUpdateHotel } from './dto';
 
 @Injectable()
-export class HotelService {
+export class HotelService implements IHotelService {
   constructor(@InjectModel(Hotel.name) private HotelModel: Model<Hotel>) {}
 
   async create(data: ICreateHotel): Promise<Hotel> {

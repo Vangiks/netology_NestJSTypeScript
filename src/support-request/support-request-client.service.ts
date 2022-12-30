@@ -3,9 +3,12 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { TID } from 'src/common';
 import { SupportRequest, Message } from './model';
+import { ICreateSupportRequest, ISupportRequestClientService } from './support-request.interface';
 
 @Injectable()
-export class SupportRequestClientService {
+export class SupportRequestClientService
+  implements ISupportRequestClientService
+{
   constructor(
     @InjectModel(SupportRequest.name)
     private SupportRequestModel: Model<SupportRequest>,
@@ -13,7 +16,9 @@ export class SupportRequestClientService {
     private MessageModel: Model<Message>,
   ) {}
 
-  async createSupportRequest(data): Promise<SupportRequest> {
+  async createSupportRequest(
+    data: ICreateSupportRequest,
+  ): Promise<SupportRequest> {
     const newHotel: SupportRequest = new this.SupportRequestModel();
     const newMessage: Message = new this.MessageModel();
 

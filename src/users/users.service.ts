@@ -5,9 +5,10 @@ import { Model } from 'mongoose';
 import { User } from './model';
 import { ICreateUser, ISearchUserParams } from './dto';
 import * as bcrypt from 'bcrypt';
+import { IUserService } from './user.interface';
 
 @Injectable()
-export class UsersService {
+export class UsersService implements IUserService {
   constructor(@InjectModel(User.name) private UserModel: Model<User>) {}
 
   async create(data: ICreateUser): Promise<User> {
@@ -23,18 +24,18 @@ export class UsersService {
     return newUser.save();
   }
 
-  async findById(id: TID): Promise<User | null> {
+  async findById(id: TID): Promise<User> {
     return this.UserModel.findById(id).select('-__v');
   }
 
-  async findByEmail(email: string): Promise<User | null> {
+  async findByEmail(email: string): Promise<User> {
     return this.UserModel.findOne({ email }).select('-__v');
   }
 
   async findAll(
     params: ISearchUserParams,
     select?: string,
-  ): Promise<Array<User> | null> {
+  ): Promise<Array<User>> {
     const filter = {
       name: { $regex: params.name },
       email: { $regex: params.email },

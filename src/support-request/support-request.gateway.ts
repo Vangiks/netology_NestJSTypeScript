@@ -15,6 +15,7 @@ import {
 import { JwtAuthGuard } from 'src/auth/guards';
 import { SupportRequestClientGuard } from './support-request-client.guard';
 import { SupportRequestService } from './support-request.service';
+import { IGetMessages } from './support-request.interface';
 
 @WebSocketGateway({ cors: true })
 export class SupportRequestGateway {
@@ -25,7 +26,9 @@ export class SupportRequestGateway {
   @UseInterceptors(new ResponseInterceptor())
   @UseFilters(new WsExceptionFilter())
   @SubscribeMessage('subscribeToChat')
-  handleGetMessage(@MessageBody() chatId: string) {
+  handleGetMessage(
+    @MessageBody() chatId: string,
+  ): Promise<Array<IGetMessages>> {
     return this.supportRequestService.getMessages(chatId);
   }
 }

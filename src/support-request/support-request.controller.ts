@@ -35,6 +35,10 @@ import {
   sendMessageSupportRequestSchema,
 } from './validation/schema';
 import { User } from 'src/users/model';
+import {
+  ICreateSupportRequest,
+  IGetMessages,
+} from './support-request.interface';
 @Controller()
 export class SupportRequestController {
   constructor(
@@ -124,7 +128,7 @@ export class SupportRequestController {
   @Get('common/support-requests/:id/messages')
   async getAllMessagesSupportRequest(
     @Param('id', new ParseObjectIdPipe()) id: string,
-  ) {
+  ): Promise<Array<IGetMessages>> {
     return await this.supportRequestService.getMessages(id);
   }
 
@@ -137,7 +141,7 @@ export class SupportRequestController {
     body: { text: string },
     @GetUser()
     user: User,
-  ) {
+  ): Promise<Array<IGetMessages>> {
     const data: ISendMessageDto = {
       author: user._id,
       supportRequest: id,
@@ -177,8 +181,8 @@ export class SupportRequestController {
     @GetUser()
     user: User,
   ) {
-    const newCupportRequest = {
-      user,
+    const newCupportRequest: ICreateSupportRequest = {
+      user: user._id,
       text: data.text,
     };
     const newSupportrequest =

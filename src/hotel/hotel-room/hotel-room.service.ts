@@ -8,12 +8,16 @@ import {
   IUpdateHotelRoom,
   ISearchHotelRoomsParams,
 } from './dto';
-import { IHotelRoom } from './hotel-room.interface';
+import {
+  IHotelRoom,
+  IHotelRoomService,
+  ISearchHotelRoom,
+} from './hotel-room.interface';
 import { Hotel } from '../model';
 import { HotelService } from '../hotel.service';
 
 @Injectable()
-export class HotelRoomService {
+export class HotelRoomService implements IHotelRoomService {
   constructor(
     @InjectModel(HotelRoom.name)
     private HotelRoomModel: Model<HotelRoom>,
@@ -46,9 +50,11 @@ export class HotelRoomService {
     filters: ISearchHotelRoomsParams,
     select: string = '-__v',
     pagination: IPagination,
-  ) {
-    if (filters.isEnabled) {
-      filters.isEnabled = filters.isEnabled;
+  ): Promise<Array<ISearchHotelRoom>> {
+    const noIsEnabled = ({ isEnabled, ...filters }: ISearchHotelRoomsParams) =>
+      filters;
+    if (!filters.isEnabled) {
+      noIsEnabled(filters);
     }
     return this.HotelRoomModel.find(filters)
       .select(select)

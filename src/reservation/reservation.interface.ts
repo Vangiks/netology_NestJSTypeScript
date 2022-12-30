@@ -1,4 +1,5 @@
 import { TID } from 'src/common';
+import { IReservationDto, IReservationSearchOptions } from './dto';
 
 export interface IReservation {
   userId: TID;
@@ -9,3 +10,11 @@ export interface IReservation {
 }
 
 export interface ICreateReservation extends Omit<IReservation, 'hotelId'> {}
+
+export interface IReservationService {
+  addReservation(data: ICreateReservation): Promise<IReservationDto>;
+  removeReservation(id: TID, userId?: string): Promise<void>;
+  getReservations(
+    filter: IReservationSearchOptions,
+  ): Promise<Array<IReservationDto>>;
+}
